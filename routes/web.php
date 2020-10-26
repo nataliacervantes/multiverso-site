@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes();
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/', 'HomeController@index')->name('home');
+// Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('/','CatalogoController@index');
 Route::get('catalogo','CatalogoController@index');
 Route::get('eventos','EventosController@index');
 Route::get('detalle/{id}','CatalogoController@detalle');
@@ -27,10 +28,15 @@ Route::get('getImage/{id}','CatalogoController@getImage');
 Route::get('agregarCarrito','CarritoController@agregar');
 Route::get('agregarEvento','CarritoController@agregarEvento');
 Route::post('suscribirse','IndexController@suscripcion');
-Route::get('eliminarLibro/{id}','CarritoController@eliminar');
+Route::get('eliminarLibro/{id}','CarritoController@eliminarLibro');
+Route::get('eliminarEvento/{id}','CarritoController@eliminarEvento');
+Route::post('agregarComentario', 'ComentariosController@create');
+Route::get('checkout','CarritoController@checkout');
+Route::post('formEnvio','CarritoController@formEnvio');
+Route::get('calcularEnvio','CarritoController@calcularEnvio');
 
-Route::group(['middleware' => 'auth'], function () {
-   Route::post('agregarComentario', 'ComentariosController@create');
-});
+// Route::group(['middleware' => 'auth'], function () {
+  
+// });
 
 

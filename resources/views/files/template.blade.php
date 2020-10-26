@@ -4,7 +4,7 @@
         @include('files.head')
     </head>
     <body>
-        {{-- @include('partials.nav') --}}
+        @yield('popup')
         @include('files.header')
         @yield('content')
         @include('files.newsletter')

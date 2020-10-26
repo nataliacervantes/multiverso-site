@@ -812,9 +812,8 @@ PAGE JS
 	
 	$(window).on('load',function(){
 		setTimeout(function() {
-			$("#onload-popup").modal('show', {}, 500);
-		}, 3000);
-		
+			$("#onload-popup").modal('show', {}, 100);
+		}, 800);
 	});
 	
 })(jQuery);

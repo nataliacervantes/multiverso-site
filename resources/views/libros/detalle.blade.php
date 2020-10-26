@@ -6,60 +6,37 @@
 	<div class="container">
 		<div class="row">
             <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
-              <div class="product-image">
+                <div class="product-image">
                     <div class="product_img_box">
-                        <img id="product_img" src='{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Imagenes) !!}' data-zoom-image="assets/images/product_zoom_img1.jpg" alt="product_img1" />
-                        <a href="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Imagenes) !!}" class="product_img_zoom" title="Zoom">
+                        <img id="product_img" src='{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Portada) !!}' data-zoom-image="assets/images/product_zoom_img1.jpg" alt="product_img1" />
+                        <a href="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Portada) !!}" class="product_img_zoom" title="Zoom">
                             <span class="linearicons-zoom-in"></span>
                         </a>
                     </div>
-                    {{-- <div id="pr_item_gallery" class="product_gallery_item slick_slider" data-slides-to-show="4" data-slides-to-scroll="1" data-infinite="false">
-                        <div class="item">
-                            <a href="#" class="product_gallery_item active" data-image="assets/images/product_img1.jpg" data-zoom-image="assets/images/product_zoom_img1.jpg">
-                                <img src="assets/images/product_small_img1.jpg" alt="product_small_img1" />
-                            </a>
-                        </div>
-                        <div class="item">
-                            <a href="#" class="product_gallery_item" data-image="assets/images/product_img1-2.jpg" data-zoom-image="assets/images/product_zoom_img2.jpg">
-                                <img src="assets/images/product_small_img2.jpg" alt="product_small_img2" />
-                            </a>
-                        </div>
-                        <div class="item">
-                            <a href="#" class="product_gallery_item" data-image="assets/images/product_img1-3.jpg" data-zoom-image="assets/images/product_zoom_img3.jpg">
-                                <img src="assets/images/product_small_img3.jpg" alt="product_small_img3" />
-                            </a>
-                        </div>
-                        <div class="item">
-                            <a href="#" class="product_gallery_item" data-image="assets/images/product_img1-4.jpg" data-zoom-image="assets/images/product_zoom_img4.jpg">
-                                <img src="assets/images/product_small_img4.jpg" alt="product_small_img4" />
-                            </a>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="pr_detail">
+            <div class="col-lg-6 col-md-6 " style="padding: 5% 0">
+                <div class="pr_detail" style="padding: 10% 0; margin:30px">
+                    <h4 class="product_title"><a href="{!! url('detalle/'.$libro->id) !!}">{{$libro->Titulo}}</a></h4>
                     <div class="product_description">
-                        <h4 class="product_title"><a href="{!! url('detalle/'.$libro->id) !!}">{{$libro->Titulo}}</a></h4>
-                            <div class="product_price">
-                                <span class="price">$ {{number_format($libro->Precio,2)}}</span>
-                            </div>
-                            <div class="rating_wrap">
-                                <div class="rating">
-                                    <div class="product_rate" style="width:{{ (100/5)*round($promedio) }}%"></div>
+                        <div class="product_price">
+                            <span class="price">$ {{number_format($libro->Precio,2)}}</span>
+                        </div>
+                        <div class="rating_wrap">
+                            <div class="rating">
+                                <div class="product_rate" style="width:{{ (100/5)*round($promedio) }}%">
                                 </div>
-                                <span class="rating_num">({{count($comentarios)}})</span>
                             </div>
-                            <div class="pr_desc">
-                                <p>{{$libro->Descripcion}}</p>
-                            </div>
-                    </div>
+                            <span class="rating_num">({{count($comentarios)}})</span>
+                        </div>
+                    </div><br><br>
+                    <div class="pr_desc"><p>{{$libro->Descripcion}}</p></div>
                     <hr />
                     <div class="cart_extra">
                         <div class="cart-product-quantity">
                             <div class="quantity">
                                 <input type="button" value="-" class="minus" id="menos">
-                                <input type="text" name="quantity" id="cantidad" value="1" title="Qty" class="qty" size="4">
+                                <input type="text" name="quantity" id='cantidad' value="1" title="Qty" class="qty" size="4">
                                 <input type="button" value="+" id="mas" class="plus">
                             </div>
                         </div>
@@ -67,20 +44,16 @@
                                 <a  class="btn btn-fill-out btn-addtocart" onclick="agregar({{$libro->id}});" style="color:aliceblue" id="productoId" value="{{$libro->id}}">
                                 <i class="icon-basket-loaded"></i>Agregar al carrito</a>
                             {{-- <a class="add_compare" href="#"><i class="icon-shuffle"></i></a> --}}
-                            <a class="add_wishlist" href="#"><i class="icon-heart"></i></a>
+                            {{-- <a class="add_wishlist" href="#"><i class="icon-heart"></i></a> --}}
                         </div>
                     </div>
                     <hr />
-                    {{-- <ul class="product-meta">
-                        <li>SKU: <a href="#">BE45VGRT</a></li>
-                        <li>Category: <a href="#">Clothing</a></li>
-                        <li>Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">printed</a> </li>
-                    </ul> --}}
                     <div class="product_share">
-                        <span>Compartir:</span>
                         <ul class="social_icons">
-                            <li><a href="#"><i class="ion-social-facebook"></i></a></li>
-                            <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
+                            <li>
+                                {{-- %2Fcatalogo --}}
+                                <iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Fmultiversolibreria.com&layout=button&size=large&appId=1635210993323859&width=103&height=28" width="103" height="28" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -427,11 +400,11 @@
 
 @section('scripts')
     <script>   
-
         function agregar(id){
-            var cantidad =  $('#cantidad').val();
-
+            var cantidad = $('#cantidad').val();
+            // alert(cantidad)
             $.ajax({
+                async:true,
                 url: "{{url('agregarCarrito') }}",
                 method: 'GET',
                 data: {
@@ -439,8 +412,12 @@
                     id: id,
                 }
             }).done(function(result){
+                alert(result)
                 if(result == 'Hecho'){
-                   
+                //    $('#headerNew').html(result);
+                //    window.location.reload(true);
+                //    window.location.href = window.location.href;
+                    $("#headerNew").load(" #headerNew");
                 }
             });
         }
@@ -458,7 +435,9 @@
                     }
                     var si = $('#Star_rating').val();
                     // alert(si)
-                });
             });
+        });
+
+        // <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v8.0&appId=1635210993323859&autoLogAppEvents=1" nonce="sjuzPH7k"></
     </script>
 @endsection

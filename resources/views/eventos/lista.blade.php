@@ -39,65 +39,11 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                        {{-- <tfoot>
-                        	<tr>
-                            	<td colspan="6" class="px-0">
-                                	<div class="row no-gutters align-items-center">
-
-                                    	<div class="col-lg-4 col-md-6 mb-3 mb-md-0">
-                                            <div class="coupon field_form input-group">
-                                                <input type="text" value="" class="form-control form-control-sm" placeholder="Enter Coupon Code..">
-                                                <div class="input-group-append">
-                                                	<button class="btn btn-fill-out btn-sm" type="submit">Aplicar Cupón</button>
-                                                </div>
-                                            </div>
-                                    	</div>
-                                        <div class="col-lg-8 col-md-6 text-left text-md-right">
-                                            <button class="btn btn-line-fill btn-sm" type="submit">Actualizar Carrito</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tfoot> --}}
                     </table>
                 </div>
             </div>
         </div>
-        {{-- <div class="row">
-            <div class="col-12">
-            	<div class="medium_divider"></div>
-            	<div class="divider center_icon"><i class="ti-shopping-cart-full"></i></div>
-            	<div class="medium_divider"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-            	<div class="border p-3 p-md-4">
-                    <div class="heading_s1 mb-3">
-                        <h6>Total de Carrito</h6>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td class="cart_total_label">Subtotal</td>
-                                    <td class="cart_total_amount">$349.00</td>
-                                </tr>
-                                <tr>
-                                    <td class="cart_total_label">Shipping</td>
-                                    <td class="cart_total_amount">Free Shipping</td>
-                                </tr>
-                                <tr>
-                                    <td class="cart_total_label">Total</td>
-                                    <td class="cart_total_amount"><strong>$349.00</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <a href="#" class="btn btn-fill-out">Ir a pagar</a>
-                </div>
-            </div>
-        </div> --}}
+      
     </div>
 </div>
 <!-- END SECTION SHOP -->

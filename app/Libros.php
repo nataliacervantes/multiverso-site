@@ -17,4 +17,14 @@ class Libros extends Model
    {
        return $this->belongsTo(Escritores::class);
    }
+
+   public function comentarios()
+   {
+       return $this->hasMany(Comentarios::class,'books_id');
+   }
+
+   public function carrito()
+   {
+       return $this->belongsTo(Carrito::class);
+   }
 }

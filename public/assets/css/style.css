@@ -83,6 +83,13 @@ ul,li,ol {
 	margin: 0;
 	padding: 0;
 }
+.fader { display: inline-block; }
+.fader img:last-child {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    display: none;
+}
 fieldset {
 	border: 0 none;
 	margin: 0 auto;
@@ -3821,7 +3828,8 @@ footer {
 	overflow: hidden;
 }
 .footer_dark {
-	background-color: #ffffff;
+	/* background-color: #ffffff; */
+	background-image: url('/../images/multiversologo.jpg');
 	position: relative;
 }
 .footer_top {

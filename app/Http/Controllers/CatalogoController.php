@@ -11,10 +11,9 @@ use Illuminate\Support\Facades\Storage;
 class CatalogoController extends Controller
 {
     public function index(){
-        $libros = Libros::all();
         $autores = Escritores::all();
-
-
+        $suma=0;
+           
         return view('libros.catalogo',compact('autores'));
     }
 

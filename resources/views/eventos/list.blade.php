@@ -15,23 +15,28 @@ use Carbon\Carbon;
                             <div class="blog_post blog_style2">
                                 <div class="blog_img">
                                     <a href="blog-single.html">
-                                        <img src="assets/images/blog_small_img1.jpg" alt="blog_small_img1">
+                                        @if(!empty($evento->Video))
+                                            @php
+                                                echo $evento->Video; 
+                                            @endphp
+                                        @endif
+                                        {{-- <iframe width="394" height="266" src="https://www.youtube.com/watch?v=2I1ZU5g1QNo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> --}}
+                                        {{-- <img src="assets/images/blog_small_img1.jpg" alt="blog_small_img1"> --}}
                                     </a>
                                 </div>
                                 <div class="blog_content bg-white">
                                     <div class="blog_text">
-                                    
                                     <h6 class="blog_title"><a href="blog-single.html">{{$evento->Evento}}</a></h6>
                                         <ul class="list_none blog_meta">
                                             @php
                                                 $fecha = Carbon::create($evento->Fecha);
                                             @endphp
                                             <li><a href="#"><i class="ti-calendar"></i>{{$fecha->format('d-m-Y')}}</a></li>
-                                            <li><a href="#"><i class="ti-location-pin"></i>{{$evento->Lugar}}</a></li>
+                                            <li><a href="{{ $evento->Fanpage}}"  target="_blank"><i class="ti-location-pin"></i>{{$evento->Lugar}}</a></li>
                                         </ul>
                                         <ul class="list_none blog_meta">
-                                            <li><a href="#"><i class="ti-map-alt"></i>{{$evento->Domicilio}}</a></li>
-                                            <li><a href="#"><i class="ti-money"></i>{{$evento->Costo}}</a></li>
+                                        <li><a href="{{ $evento->Maps}}" target="_blank"><i class="ti-map-alt"></i>{{$evento->Domicilio}}</a></li>
+                                            <li style="color: #FF324D; font-size: 20px; margin-top: -7px"><i class="ti-money"></i>{{$evento->Costo}}</li>
                                         </ul>
                                         <p>Ven y conoce mi último libro</p>
                                         <ul class="list_none blog_meta" data-title="Quantity">
@@ -81,31 +86,6 @@ use Carbon\Carbon;
                                 <li><a href="#"><span class="archive_year">June 2019</span><span class="archive_num">(12)</span></a></li>
                             </ul>
                         </div>
-                        {{-- <div class="widget">
-                            <div class="shop_banner">
-                                <div class="banner_img overlay_bg_20">
-                                    <img src="assets/images/sidebar_banner_img.jpg" alt="sidebar_banner_img">
-                                </div> 
-                                <div class="shop_bn_content2 text_white">
-                                    <h5 class="text-uppercase shop_subtitle">New Collection</h5>
-                                    <h3 class="text-uppercase shop_title">Sale 30% Off</h3>
-                                    <a href="#" class="btn btn-white rounded-0 btn-sm text-uppercase">Shop Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="widget">
-                            <h5 class="widget_title">tags</h5>
-                            <div class="tags">
-                                <a href="#">General</a>
-                                <a href="#">Design</a>
-                                <a href="#">jQuery</a>
-                                <a href="#">Branding</a>
-                                <a href="#">Modern</a>
-                                <a href="#">Blog</a>
-                                <a href="#">Quotes</a>
-                                <a href="#">Advertisement</a>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -127,9 +107,8 @@ use Carbon\Carbon;
                     id: id,
                 }
             }).done(function(result){
-                if(result == 'Hecho'){
-                   alert(result)
-                }
+                // alert(result)
+                $("#headerNew").load(" #headerNew");
             });
         }
     </script>
