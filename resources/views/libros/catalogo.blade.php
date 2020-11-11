@@ -89,12 +89,13 @@ use App\Comentarios;
 @endsection
 
 @section('scripts')
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-      
+       
         // $('.fader').hover(function() {
         //     $(this).find("img").fadeToggle();
         // });
-
+        // $('.alert').alert()
         function agregar(id){
             $.ajax({
                 async:true,
@@ -112,6 +113,15 @@ use App\Comentarios;
                 //    window.location.reload(true);
                 //    window.location.href = window.location.href;
                     $("#headerNew").load(" #headerNew");
+                    swal("Libro agregado", {
+                        buttons: false,
+                        timer: 3000,
+                    });
+                }else if(result == 'Fail'){
+                    swal (  "Hubo un error, intenta más tarde por favor!" ,{
+                        buttons: false,
+                        timer: 3000,
+                    })
                 }
             });
         }

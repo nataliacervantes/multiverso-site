@@ -41,7 +41,7 @@ class CarritoController extends Controller
             // return Redirect::back()->with('status', 'El producto se agregó al Carrito!');
             return $exito;
         }else{
-            $fail = 'No se armó';
+            $fail = 'Fail';
             // return Redirect::back()->with('status', 'Hubo un problema, inténtalo más tarde!');
             return $fail;
         }

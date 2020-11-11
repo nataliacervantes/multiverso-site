@@ -16,7 +16,9 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.4",
         "laravelcollective/html": "^6.2",
-        "nesbot/carbon": "^2.41"
+        "mercadopago/dx-php": "2.1.1",
+        "nesbot/carbon": "^2.41",
+        "paypal/rest-api-sdk-php": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

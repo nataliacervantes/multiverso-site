@@ -34,7 +34,15 @@ Route::post('agregarComentario', 'ComentariosController@create');
 Route::get('checkout','CarritoController@checkout');
 Route::post('formEnvio','CarritoController@formEnvio');
 Route::get('calcularEnvio','CarritoController@calcularEnvio');
-
+Route::post('realizarPedido','PedidosController@crearPedido');
+Route::any('payWithPaypal','PayPalController@payWithPaypal');
+Route::get('paypal/status','PayPalController@paypalStatus');
+Route::get('pagoExitoso','PayPalController@exito');
+Route::get('fail','PayPalController@fail');
+Route::post('depositoBancario','PayPalController@deposito');
+Route::get('subirFicha','PedidosController@subirFicha');
+Route::post('subirFichaPago','PedidosController@subirFichaPago');
+Route::get('buscarEvento','EventosController@buscar');
 // Route::group(['middleware' => 'auth'], function () {
   
 // });

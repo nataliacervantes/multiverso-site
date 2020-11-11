@@ -37,6 +37,18 @@ Version      : 1.0
 /*===================================*
   01.GENERAL STYLE
 *===================================*/
+
+.swal-modal {
+	background-color: rgba(81, 83, 81, 0.69);
+	border: 3px solid rgb(156, 156, 156);
+	color: white;
+  }
+  .swal-text{
+	  color: white;
+  }
+  .swal-overlay {
+	background-color: transparent;
+  }
 html, body {
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
@@ -194,7 +206,7 @@ button:focus {
 }
 .btn-fill-out {
 	background-color: transparent;
-	border: 1px solid #FF324D;
+	border: 1px solid #423e3f;
 	color: #fff;
 	position: relative;
 	overflow: hidden;
@@ -207,7 +219,7 @@ button:focus {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	background-color: #FF324D;
+	background-color: #423e3f;
 	z-index: -1;
 	transition: all 0.3s ease-in-out;
 	width: 51%;
@@ -221,7 +233,7 @@ button:focus {
 	width: 0;
 }
 .btn-fill-out:hover {
-	color: #FF324D !important;
+	color: #423e3f !important;
 }
 .btn-fill-line {
 	background-color: transparent;
@@ -1506,7 +1518,7 @@ button:focus {
 	top: -3px;
 	left: 0;
 	font-size: 11px;
-	background-color: #FF324D;
+	background-color: #423e3f;
 	border-radius: 50px;
 	height: 16px;
 	line-height: 16px;

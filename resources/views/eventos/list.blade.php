@@ -69,21 +69,24 @@ use Carbon\Carbon;
                     <div class="sidebar">
                         <div class="widget">
                             <div class="search_form">
-                                <form> 
-                                    <input required="" class="form-control" placeholder="Search..." type="text">
+                                {!! Form::open(['url'=>'buscarEvento', 'method'=>'GET']) !!}
+                                    <input required="" class="form-control" placeholder="Buscar Evento..." type="text" name="buscar">
                                     <button type="submit" title="Subscribe" class="btn icon_search" name="submit" value="Submit">
                                         <i class="ion-ios-search-strong"></i>
                                     </button>
-                                </form>
+                                {!! Form::close() !!}
                             </div>
                         </div>
                         <div class="widget">
                             <h5 class="widget_title">Fechas</h5>
                             <ul class="widget_archive">
-                                @php
-
-                                @endphp
-                                <li><a href="#"><span class="archive_year">June 2019</span><span class="archive_num">(12)</span></a></li>
+                                <li><a href="#"><span class="archive_year">Junio</span><span class="archive_num">(12)</span></a>
+                                    <ul>
+                                        <li>
+                                            prueba
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>

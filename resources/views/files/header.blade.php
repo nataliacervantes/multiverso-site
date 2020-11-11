@@ -45,10 +45,13 @@
                             <a data-toggle="dropdown" class="nav-link nav_item active" href="#">Home</a>
                         </li>
                         <li >
-                        <a class="nav-link nav_item" href="{{ url('catalogo')}}" >Libros</a>
+                            <a class="nav-link nav_item" href="{{ url('catalogo')}}" >Libros</a>
                         </li>
                         <li >
-                        <a class="nav-link nav_item" href="{{url('eventos')}}" >Eventos</a>
+                            <a class="nav-link nav_item" href="{{url('eventos')}}" >Eventos</a>
+                        </li>
+                        <li >
+                            <a class="nav-link nav_item" href="{{url('subirFicha')}}" >Subir Ficha </a>
                         </li>
                         <li><a class="nav-link nav_item" href="contact.html">Contacto</a></li> 
                     </ul>
