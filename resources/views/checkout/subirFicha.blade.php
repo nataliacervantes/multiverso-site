@@ -5,7 +5,7 @@
 <div class="section">
 	<div class="container">
         {{-- Sección inferior (form y pago) --}}
-        <div class="row">
+        <div class="row" style="display:block; margin:auto;">
             {{-- formulario de envío --}}
         	<div class="col-md-6 col-md-offset-8">
             	<div class="heading_s1">
@@ -16,13 +16,9 @@
                         <input type="text" required class="form-control" name="folio" id="folio"  placeholder="Ingresa el folio de tu pedido *">
                     </div>
                     {!! Form::file('FichaPago', ['class'=>'form-control']) !!}
-            {{-- </div>
-            <div class="col-md-6"> --}}
-                <br><br>
-            	{{-- <div class="border p-3 p-md-4"> --}}
+                    <br><br>
                     <button  class="btn btn-fill-out" type="submit">Subir</button>
-                    {!! Form::close() !!}
-                {{-- </div> --}}
+                {!! Form::close() !!}
             </div>
         </div>
     </div>

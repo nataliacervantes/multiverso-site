@@ -10,15 +10,15 @@ use Illuminate\Queue\SerializesModels;
 class ConfirmacionDePago extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $msg;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($message)
     {
-        //
+        $this->msg = $message;
     }
 
     /**
@@ -28,7 +28,7 @@ class ConfirmacionDePago extends Mailable
      */
     public function build()
     {
-        return $this->from('nataliaglezcervantes.com')
+        return $this->from('nataliaglezcervantes@gmail.com')
                 ->view('emails.confirmacionPago');
     }
 }

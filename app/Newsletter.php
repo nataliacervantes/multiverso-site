@@ -9,6 +9,7 @@ class Newsletter extends Model
     protected $table = 'newsletter';
 
     protected $fillable = [
-        'Email'
+        'Email',
+        'Estado'
     ];
 }

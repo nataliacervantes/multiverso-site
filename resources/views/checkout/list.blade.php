@@ -111,6 +111,21 @@
             {{-- Cálculo de total --}}
             <div class="col-md-6">
                 <br><br>
+                    <div class="toggle_info">
+                        <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
+                    </div>
+                    <div class="panel-collapse collapse coupon_form" id="coupon">
+                        <div class="panel-body">
+                            {{-- {!! Form::open(['url'=>'aplicarCupon']) !!} --}}
+                            <div class="coupon field_form input-group">
+                                <input type="text" value="" id="cupon" name="cupon" class="form-control" placeholder="Ingresa tu código..">
+                                <div class="input-group-append">
+                                    <button onclick="aplicarCupon()" class="btn btn-fill-out btn-sm" type="button">Aplicar cupón</button>
+                                </div>
+                            </div>
+                            {{-- {!! Form::close() !!} --}}
+                        </div>
+                    </div>
             	<div class="border p-3 p-md-4">
                     <div class="heading_s1 mb-3">
                         <h6>Carrito</h6>
@@ -135,7 +150,8 @@
                     </div>
                     <button class="btn btn-fill-out" type="submit">PayPal</button>
                     {!! Form::close() !!}
-                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Hacer depósito</button>
+                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
+                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-mercado" data-toggle="modal">Mercadopago</button>
                 </div>
             </div>
         </div>
@@ -267,7 +283,6 @@
         // })
     </script>
      {{-- Scripts para Paypal --}}
-
      <script src="https://www.paypalobjects.com/api/checkout.js"></script>
      <script>
         function sumaLibro(id){
@@ -284,7 +299,6 @@
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
         }
-
         function sumaEvento(id){
             var cantidad = $('#cantidadEvento-'+id).val();
             var sum = parseInt(cantidad) + 1;
@@ -298,7 +312,6 @@
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
         }
-
         function restaLibro(id){
             var cantidad = $('#cantidadLibro-'+id).val();
             var resta = parseInt(cantidad) - 1;
@@ -312,7 +325,6 @@
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
         }
-
         function restaEvento(id){
             var cantidad = $('#cantidadEvento-'+id).val();
             var resta = parseInt(cantidad) - 1;
@@ -325,11 +337,68 @@
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
         }
+        function aplicarCupon(){
+            var cupon = $('#cupon').val();
+            // alert(cupon)
+            $.ajax({
+                url: "{{url('aplicarCupon') }}",
+                method: 'GET',
+                data: {
+                    cupon: cupon,
+                }
+            }).done(function(result){
+                // alert(result)
+                var tipo = result.charAt(result.length - 1);
+                // alert(tipo)var 
+                var val = result.split('/');
+                
+                if(tipo == '3'){
+                    $('#envio').val('0');
+                    var subtotal = $('#subtotal').val();
+                    var envio = $('#envio').val();
+                    var total = parseInt(subtotal);
+                    $('#total').val(total);
+                    swal("Felcidades, se hizo el descuento del cupón ingresado!", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                }else if(tipo == '2'){
+                    // alert(val[0])
+                    var totalOld = $('#total').val();
+                    var total = parseInt(totalOld) - parseInt(val[0]);
+                    $('#total').val(total);
+                    swal("Felcidades, se hizo el descuento del cupón ingresado!", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                }else if(tipo == '1'){
+                    total = $('#total').val();
+                    // alert(total)
+                    porcentaje = parseInt(val[0])/100;
+                    // alert(porcentaje)
+                    descuento = porcentaje*parseInt(total);
+                    // alert(descuento)
 
+                    $('#total').val(total-descuento);
+                    swal("Felcidades, se hizo el descuento del cupón ingresado!", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                }
+
+                // $('#envio').val(result);
+                // var subtotal = $('#subtotal').val();
+                // var envio = $('#envio').val();
+                // var total = parseInt(subtotal) + parseInt(envio);
+                // // alert(total)
+                // $('#total').val(total);
+                // alert($('#total').val())
+                // $("#headerNew").load(" #headerNew");
+            });
+        }
         $(document).ready(function(){
             $('#subtotal').val(parseInt($('#totalHeader').val()));
         })
-
         $('#pais').on('change',function(){
             var pais = $('#pais').val();
             // alert(pais)
@@ -429,7 +498,6 @@
                 //     }
                 // }, '#paypal-button');
         })
-
         $('#modal').on('click',function(){
             // e.preventDefault();
             var total = $('#total').val();
@@ -462,12 +530,5 @@
             $('#Total').val(total);
             $('#Envio').val(envio);
         })
-        
     </script>
-    
-    <script
-    src="https://www.paypal.com/sdk/js?client-id=SB_CLIENT_ID"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
-    paypal.Buttons().render('#paypal-button-container');
-  </script>
-       
 @endsection

@@ -43,6 +43,7 @@ Route::post('depositoBancario','PayPalController@deposito');
 Route::get('subirFicha','PedidosController@subirFicha');
 Route::post('subirFichaPago','PedidosController@subirFichaPago');
 Route::get('buscarEvento','EventosController@buscar');
+Route::get('aplicarCupon','PedidosController@cupon');
 // Route::group(['middleware' => 'auth'], function () {
   
 // });

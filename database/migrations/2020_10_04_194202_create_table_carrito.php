@@ -16,6 +16,7 @@ class CreateTableCarrito extends Migration
         Schema::create('carrito', function (Blueprint $table) {
             $table->id();
             $table->text('session_estatus')->nullable();
+            $table->integer('pedidos_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('books_id')->nullable();
             $table->integer('eventos_id')->nullable();

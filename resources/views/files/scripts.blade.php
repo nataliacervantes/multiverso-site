@@ -27,7 +27,7 @@
 <!-- scripts js --> 
 <script src="{{asset('assets/js/scripts.js')}}"></script>
 <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a> 
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 {{-- <script>
     $(document).ready(function() {

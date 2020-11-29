@@ -9,9 +9,13 @@ use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Payer;
 use PayPal\Api\PayerInfo;
+use App\Promociones;
 use PayPal\Api\ShippingAddress;
 use App\Carrito;
 use App\Pedidos;
+use App\BookPedido;
+use App\Mail\ConfirmacionDePago;
+use App\Mail\ConfirmacionDePedido;
 use PayPal\Api\Amount;
 use PayPal\Api\Transaction;
 use PayPal\Api\RedirectUrls;
@@ -144,14 +148,34 @@ class PayPalController extends Controller
             $pedido->EstatusPago = 'Pagado';
             $pedido->Metodo ='PayPal';
             $pedido->save();
+            $promociones = Promociones::where('Cupon',$request->cupon)->first();
+            if($promociones != null){
+                $promociones->Limite = $promociones->Limite - 1 ;
+            }
+            
             $carritos = Carrito::where('session_estatus',session_id())->get();
+            
 
             foreach($carritos as $carrito){
-                $carrito->delete();
+                // dd($carritos);
+                if($carrito->books_id != null){
+                    // dD($carrito);
+                    $pivot = new BookPedido();
+                    $pivot->books_id = $carrito->books_id;
+                    $pivot->pedidos_id = $pedido->id;
+                    $pivot->Cantidad =$carrito->Cantidad;
+                    $pivot->save();
+                    // dd($pivot);
+                    $carrito->delete();
+                }elseif($carrito->eventos_id != null){
+                    $carrito->delete();
+                }
             }
-            Mail::to('nataliaglezcervantes@gmail.com')->send(new ConfirmacionDePago);
+
+            Mail::to('nataliaglezcervantes@gmail.com')->send(new ConfirmacionDePago($pedido));
             // dd($pedido);
-            return back();
+            session_destroy();
+            return view('checkout.confirmacioPago');
         }else{
             return $result->state;
             $status = 'Hubo un problema con la transacción, inténtalo más tarde por favor ';
@@ -188,19 +212,50 @@ class PayPalController extends Controller
         $pedido->Metodo = 'Depósito';
         // dd($pedido);
         $pedido->save();
+        $promociones = Promociones::where('Cupon',$request->cupon)->first();
+        $promociones->Limite = $promociones->Limite - 1 ;
+        Mail::to('nataliaglezcervantes@gmail.com')->send(new ConfirmacionDePedido($pedido));
         $carritos = Carrito::where('session_estatus',session_id())->get();
 
         foreach($carritos as $carrito){
-            $carrito->delete();
+            if($carrito->books_id != null){
+                // dD($carrito);
+                $pivot = new BookPedido();
+                $pivot->books_id = $carrito->books_id;
+                $pivot->pedidos_id = $pedido->id;
+                $pivot->Cantidad =$carrito->Cantidad;
+                $pivot->save();
+                // dd($pivot);
+                $carrito->delete();
+            }elseif($carrito->eventos_id != null){
+                $carrito->delete();
+            }
         }
-        
-        return back();
+        session_destroy();
+        return view('checkout.confirmacionPedido');
     }
 
+    public function exito(){
+        return view('checkout.confirmacioPago');
+    }
+
+    public function exitoPedido(){
+        return view('checkout.confirmacionPedido');
+    }
     // public function mercadoPagoPay(Request $request){
     //         // dd($request->all());
     //     SDK::setAccessToken("TEST-3058401090775798-070215-8a6d29999039e59d425eade729b3d680-594533699");
+            // MercadoPago\SDK::setAccessToken('PROD_ACCESS_TOKEN');
+            // $preference = new MercadoPago\Preference();
 
+            // // Crea un ítem en la preferencia
+            // $item = new MercadoPago\Item();
+            // $item->title = 'Mi producto';
+            // $item->quantity = 1;
+            // $item->unit_price = 75.56;
+            // $preference->items = array($item);
+            // $preference->save();
+            
     //         $payment = new Payment();
     //         $payment->transaction_amount = (float)$request->transactionAmount;
     //         $payment->token = $request->token;
@@ -233,57 +288,7 @@ class PayPalController extends Controller
     //                 $cfdi = DatosFiscales::find($request->idFacturacion);
     //                 $pedido = Pedidos::find($request->idPedido);
 
-    //                 if($request->facturacion == null){
-    //                     $usoCFDI = "P01";
-    //                 }elseif($request->facturacion == 'si'){
-    //                     $usoCFDI = $cfdi->CFDI;
-    //                 }
-
-    //                 if($request->idTipoPago == 'Pp' ){
-    //                     $tipoPago = 7;
-    //                     $estatus = 2;
-    //                 }else{
-    //                     $tipoPago = $request->idTipoPago;
-    //                     $estatus = 1;
-    //                 }
-
-    //                 $user = User::find(Auth::user()->id);
-    //                 $id = $user->idBonance;
-
-    //                 $productos = Carrito::where('pedido_id',$request->idPedido)->get();
-
-    //                 // dd($productos);
-    //                 $data['form_params'] = [
-    //                     'idUsuario' => $id,
-    //                     'Folio' => $request->folio,
-    //                     'Fecha' => Carbon::now()->format('Y-m-d'),
-    //                     'TipoDePago' => $request->idTipoPago,
-    //                     'TipoDeCambio' => $request->tipoCambio,
-    //                     'CuentaDePago' => '',
-    //                     'idDomicilio' => $request->idDomicilio,
-    //                     'UsoCFDI' => $usoCFDI,
-    //                     'Estatus' => $estatus,
-    //                     'Partidas' => [],
-    //                 ];
-
-    //                 foreach($productos as $product){
-    //                     // dd($product);
-    //                     $row=[];
-    //                     $row['idProducto'] = $product->Producto;
-    //                     $row['Cantidad'] = $product->Cantidad;
-    //                     $row['PrecioUnitario'] = $product->Precio;
-    //                     $row['CodigoCliente'] = $product->id_usuario;
-    //                     $data['form_params']['Partidas'][] = $row;
-    //                 }
-    //                     // dd($data);
-    //                 $client = new Client([
-    //                     'base_uri' => 'http://asserver.ddns.net/grupobonance/api/',
-    //                     'timeout' => 30.0,
-    //                 ]);
-
-    //                 $response = $client->request('POST', 'pedido', $data);
-
-    //                 $respuesta  = json_decode($response->getBody());
+    //               
 
     //                 // dd($respuesta);
     //                         // return response(json_encode($respuesta->status),200);
@@ -310,12 +315,12 @@ class PayPalController extends Controller
     //         }
     // }
 
-    // public function metodosPago(){
-    //     SDK::setAccessToken("APP_USR-3058401090775798-070215-0b5afad6fe073548164a7daa5e0d870a-594533699");
-    //     $payment_methods = SDK::get("/v1/payment_methods");
-    //     // dd($payment_methods);
-    //     return response($payment_methods['body']);
-    // }
+    public function metodosPago(){
+        SDK::setAccessToken("APP_USR-3058401090775798-070215-0b5afad6fe073548164a7daa5e0d870a-594533699");
+        $payment_methods = SDK::get("/v1/payment_methods");
+        // dd($payment_methods);
+        return response($payment_methods['body']);
+    }
 
     // public function pagoEfectivo(Request $request){
     //     // dd($request->all());

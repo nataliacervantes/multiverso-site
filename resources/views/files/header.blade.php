@@ -7,6 +7,7 @@
     // echo session_status();
         $carritos = Carrito::where('session_estatus',session_id())->get();
 @endphp
+
 <header id="headerNew" class="header_wrap fixed-top header_with_topbar">
 	<div class="top-header">
         <div class="container">
