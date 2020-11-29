@@ -35,9 +35,9 @@
                     <div class="cart_extra" style="display: flex">
                         <div class="cart-product-quantity">
                             <div class="quantity">
-                                <input type="button" value="-" class="minus d-none d-sm-none d-md-block" id="menos">
+                                <input type="button" value="-" class="minus " id="menos">
                                 <input type="text" name="quantity" id='cantidad' value="1" title="Qty" class="qty" size="4">
-                                <input type="button" value="+" id="mas" class="plus d-none d-sm-none d-md-block">
+                                <input type="button" value="+" id="mas" class="plus ">
                             </div>
                         </div>
                         <div class="cart_btn">
@@ -45,8 +45,6 @@
                                 <i class="icon-basket-loaded"></i>Agregar al carrito</a>
                                 <a  class="btn btn-fill-out btn-addtocart d-block d-sm-none d-md-none" onclick="agregar({{$libro->id}});" style="color:aliceblue" id="productoId" value="{{$libro->id}}">
                                 <i class="icon-basket-loaded"></i>Comprar</a>
-                            {{-- <a class="add_compare" href="#"><i class="icon-shuffle"></i></a> --}}
-                            {{-- <a class="add_wishlist" href="#"><i class="icon-heart"></i></a> --}}
                         </div>
                     </div>
                     <hr />
