@@ -13,6 +13,7 @@
                         	<tr>
                                 <th class="product-thumbnail">&nbsp;</th>
                                 <th class="product-name">Producto</th>
+                                <th> Precio Unitario</th>
                                 <th>Cantidad</th>
                                 <th class="product-price">Precio</th>
                             </tr>
@@ -22,15 +23,16 @@
                                 <tr>
                                     @if($cart->books_id != null )
                                     <input type="hidden" value="{{$cart->books_id}}" id="idLibro">
-                                        <td class="product-thumbnail"><a href="#"><img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$cart->books->Portada) !!}" alt="cart_thumb1"></a></td>
-                                        <td >{{$cart->books->Titulo}}</td>
-                                        <td class="product-quantity" data-title="Quantity"><div class="quantity">
+                                        <td class="product-thumbnail"><a href="#"><img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$cart->books->Portada) !!}" ></a></td>
+                                        <td class="product-name" data-title="Producto">{{$cart->books->Titulo}}</td>
+                                        <td class="product-price" data-title="Precio U.">$45.00</td>
+                                        <td class="product-quantity" data-title="Cantidad"><div class="quantity">
                                             <input type="button" value="-" class="minus" onclick="restaLibro({{$cart->books->id}})">
                                             <input type="text" id='cantidadLibro-{{$cart->books->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
                                             <input type="button" value="+" class="plus" onclick="sumaLibro({{$cart->books->id}});">
                                             </div></td>
                                             <input type="hidden" id="precio-{{$cart->books->id}}" value="{{$cart->books->Precio}}">
-                                        <td class="product-price"  data-title="Price"><input type="text" value="{{$cart->Subtotal}}" id="precioLibro-{{$cart->books->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
+                                        <td class="product-price"  data-title="Precio"><input type="text" value="$ {{$cart->Subtotal}}" id="precioLibro-{{$cart->books->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
                                     @elseif($cart->eventos_id != null )
                                         <input type="hidden" value="{{$cart->books_id}}" id="idEvento">
                                         <td class="product-thumbnail">
@@ -43,8 +45,8 @@
                                             <input type="button" value="+" class="plus" onclick="sumaEvento({{$cart->eventos->id}})">
                                             </div></td>
                                             <input type="hidden" id="costo-{{$cart->eventos->id}}" value="{{$cart->eventos->Costo}}">
-                                        <td class="product-price" data-title="Price"><input value="{{$cart->Subtotal}}" type="text" id="precioEvento-{{$cart->eventos->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
-                                        {{-- {{ number_format($cart->Subtotal * $cart->Cantidad)}} --}}
+                                        <td class="product-price" data-title="Price"><input value="$ {{$cart->Subtotal}}" type="text" id="precioEvento-{{$cart->eventos->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
+                                      
                                     @endif
                                 </div></td>
                                     <td class="product-subtotal"  id="totalEvento" data-title="Total"></td> 
@@ -147,6 +149,28 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="payment_method">
+                        <div class="heading_s1">
+                            <h4>Payment</h4>
+                        </div>
+                        <div class="payment_option">
+                            <div class="custome-radio">
+                                <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" value="option3" checked="">
+                                <label class="form-check-label" for="exampleRadios3">Direct Bank Transfer</label>
+                                <p data-method="option3" class="payment-text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration. </p>
+                            </div>
+                            <div class="custome-radio">
+                                <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios4" value="option4">
+                                <label class="form-check-label" for="exampleRadios4">Check Payment</label>
+                                <p data-method="option4" class="payment-text">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
+                            </div>
+                            <div class="custome-radio">
+                                <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios5" value="option5">
+                                <label class="form-check-label" for="exampleRadios5">Paypal</label>
+                                <p data-method="option5" class="payment-text">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
+                            </div>
+                        </div>
                     </div>
                     <button class="btn btn-fill-out" type="submit">PayPal</button>
                     {!! Form::close() !!}
@@ -292,7 +316,7 @@
             var price = $('#precio-'+id).val();
             var sub = sum * Number(price);
           
-            $('#precioLibro-'+id).val(Number(sub));
+            $('#precioLibro-'+id).val('$'+Number(sub));
             
             var subtotal = $('#subtotal').val();
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
@@ -305,7 +329,7 @@
             var price = $('#costo-'+id).val();
             var sub = sum * price;
             // alert(sub)
-            $('#precioEvento-'+id).val(sub);
+            $('#precioEvento-'+id).val('$'+sub);
 
             var subtotal = $('#subtotal').val();
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
@@ -318,7 +342,7 @@
             var price = $('#precio-'+id).val();
             var sub = resta * price;
             // alert(sub)
-            $('#precioLibro-'+id).val(sub);
+            $('#precioLibro-'+id).val('$'+Number(sub));
 
             var subtotal = $('#subtotal').val();
             var sumarSubtotal = parseInt(subtotal) - parseInt(price) ;
@@ -331,7 +355,7 @@
             var price = $('#costo-'+id).val();
             var sub = resta * price;
             // alert(sub)
-            $('#precioEvento-'+id).val(sub);
+            $('#precioEvento-'+id).val('$'+sub);
             var subtotal = $('#subtotal').val();
             var sumarSubtotal = parseInt(subtotal) - parseInt(price);
             // alert(sumarSubtotal)

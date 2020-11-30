@@ -25,62 +25,52 @@ use Illuminate\Support\Facades\Mail;
 class PayPalController extends Controller
 {
     public function payWithPaypal(Request $request){
-        session_start();
-        $pedido = new Pedidos();
-        $pedidos = Pedidos::latest('Folio')->first();
+        // session_start();
+        // $pedido = new Pedidos();
+        // $pedidos = Pedidos::latest('Folio')->first();
 
-        if($pedidos != null){
-            $pedido->Folio = $pedidos->Folio + 1;
-        }else{
-            $pedido->Folio = 000000;
-        }
+        // if($pedidos != null){
+        //     $pedido->Folio = $pedidos->Folio + 1;
+        // }else{
+        //     $pedido->Folio = 000000;
+        // }
         
-        $pedido->session = session_id();
-        $pedido->EstatusPago = 'Pendiente';
-        $pedido->EstatusEnvio = 'Pendiente';
-        $pedido->Nombre = $request->Nombre;
-        $pedido->Apellido = $request->Apellido;
-        $pedido->Domicilio = $request->Domicilio;
-        $pedido->Colonia = $request->Colonia;
-        $pedido->Ciudad = $request->Ciudad;
-        $pedido->Estado = $request->Estado;
-        $pedido->Pais = $request->Pais;
-        $pedido->CP = $request->CP;
-        $pedido->Email = $request->Email;
-        $pedido->Telefono = $request->Telefono;
-        $pedido->InfoExtra = $request->InfoExtra;
-        $pedido->Total = $request->Total;
-        $pedido->Envio = $request->Envio;
+        // $pedido->session = session_id();
+        // $pedido->EstatusPago = 'Pendiente';
+        // $pedido->EstatusEnvio = 'Pendiente';
+        // $pedido->Nombre = $request->Nombre;
+        // $pedido->Apellido = $request->Apellido;
+        // $pedido->Domicilio = $request->Domicilio;
+        // $pedido->Colonia = $request->Colonia;
+        // $pedido->Ciudad = $request->Ciudad;
+        // $pedido->Estado = $request->Estado;
+        // $pedido->Pais = $request->Pais;
+        // $pedido->CP = $request->CP;
+        // $pedido->Email = $request->Email;
+        // $pedido->Telefono = $request->Telefono;
+        // $pedido->InfoExtra = $request->InfoExtra;
+        // $pedido->Total = $request->Total;
+        // $pedido->Envio = $request->Envio;
 
-        // dd($pedido);
-        $pedido->save();
+        // // dd($pedido);
+        // $pedido->save();
+
         $apiContext = new \PayPal\Rest\ApiContext(
             new OAuthTokenCredential(
-                'AZqhIzlG5wszF6K-p7mpPKHi_TNsKD27ALvL-KXowrGCafQ6Pcorec0XBxN1oQ6Uy7YQXzjLoYcHW83I',     // ClientID
-                'EAaPukpHpqFn9aKqG0vWpAsoFT6n_fXfDbp46b2i6QIOABinOcuIzs6qUfrdmmsA8zNerZEwYuR0WoDH'    // ClientSecret
+                // 'AbBav_7FEP9RIE_aTYraX-McSAtmQOZUK-QRfNCO7BuxOm6zkaIEaR-nO_NFYnhQLEI4IJTvukChkZfV',     // ClientID
+                // 'EK0exQkW6RGs4YLm_c38mgyYLmoD5dgqxrzPYN0TT6cJZIa7Rjt-5LkCAymGRF6ygwTCKy-aIFKng5ei'    // ClientSecret
+                // Sandbox
+                // 'AZqhIzlG5wszF6K-p7mpPKHi_TNsKD27ALvL-KXowrGCafQ6Pcorec0XBxN1oQ6Uy7YQXzjLoYcHW83I',
+                // 'EAaPukpHpqFn9aKqG0vWpAsoFT6n_fXfDbp46b2i6QIOABinOcuIzs6qUfrdmmsA8zNerZEwYuR0WoDH'
+                'ARHQ5hzdtBdR-S2xrruAmGVsKewhBGybLQ-O1AwXgYhnHIz4YLnHLdR9-CoY5GENRHzVrt_KykbkOIKP',
+                'EI0HakubvEMBVrL3km2GO1yi_fGtFu5FoYz3GJXIbhO0sRWiemDhqB3aUP3tBdQuRzd2PN5tb25AiZ9q'
             )
         );
         // dd($request->all());
-    
+        // dd($apiContext);
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
 
-        $payerInfo = new PayerInfo();
-        $payerInfo->setEmail($request->Email);
-        $payerInfo->setFirstName($request->Nombre);
-        $payerInfo->setLastName($request->Apellido);
-        $payerInfo->setPhone($request->Telefono);
-
-        $addressShipping = new ShippingAddress();
-        $addressShipping->setLine1($request->Domicilio);
-        $addressShipping->setLine2($request->Colonia);
-        $addressShipping->setCity($request->Ciudad);
-        $addressShipping->setState($request->Estado);
-        $addressShipping->setPostalCode($request->CP);
-        $addressShipping->setCountryCode($request->Pais);
-
-        $payerInfo->setShippingAddress($addressShipping);
-        // dd($payerInfo);
         $amount = new Amount();
         $amount->setTotal($request->Total);
         $amount->setCurrency('MXN');
@@ -108,10 +98,8 @@ class PayPalController extends Controller
         try {
             $payment->create($apiContext);
             // echo 'well done';
-            // dd($this->apiContext);
                 return redirect()->away($payment->getApprovalLink());
-        }
-        catch (PayPalConnectionException $ex) {
+        }catch (PayPalConnectionException $ex) {
             $status = $ex->getData();
              echo 'nel, vete a dormir';
             // return redirect('error_page')->with(['status'=>$status]);
@@ -122,8 +110,12 @@ class PayPalController extends Controller
         session_start();
         $apiContext = new \PayPal\Rest\ApiContext(
             new OAuthTokenCredential(
-                'AZqhIzlG5wszF6K-p7mpPKHi_TNsKD27ALvL-KXowrGCafQ6Pcorec0XBxN1oQ6Uy7YQXzjLoYcHW83I',     // ClientID
-                'EAaPukpHpqFn9aKqG0vWpAsoFT6n_fXfDbp46b2i6QIOABinOcuIzs6qUfrdmmsA8zNerZEwYuR0WoDH'    // ClientSecret
+                // 'AbBav_7FEP9RIE_aTYraX-McSAtmQOZUK-QRfNCO7BuxOm6zkaIEaR-nO_NFYnhQLEI4IJTvukChkZfV',     // ClientID
+                // 'EK0exQkW6RGs4YLm_c38mgyYLmoD5dgqxrzPYN0TT6cJZIa7Rjt-5LkCAymGRF6ygwTCKy-aIFKng5ei'    // ClientSecret
+                // 'AZqhIzlG5wszF6K-p7mpPKHi_TNsKD27ALvL-KXowrGCafQ6Pcorec0XBxN1oQ6Uy7YQXzjLoYcHW83I',
+                // 'EAaPukpHpqFn9aKqG0vWpAsoFT6n_fXfDbp46b2i6QIOABinOcuIzs6qUfrdmmsA8zNerZEwYuR0WoDH'
+                'ARHQ5hzdtBdR-S2xrruAmGVsKewhBGybLQ-O1AwXgYhnHIz4YLnHLdR9-CoY5GENRHzVrt_KykbkOIKP',
+                'EI0HakubvEMBVrL3km2GO1yi_fGtFu5FoYz3GJXIbhO0sRWiemDhqB3aUP3tBdQuRzd2PN5tb25AiZ9q'
             )
         );
         // dd($request->all());

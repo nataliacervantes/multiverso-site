@@ -27,15 +27,15 @@ use App\Comentarios;
                                     <div class="product">
                                         <div class="product_img fader" style="height: 400px;">
                                             <a href="{!! url('detalle/'.$libro->id) !!}">
-                                                <img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Portada) !!}" width="100px">
-                                                <img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Contraportada) !!}" width="100px">
+                                                <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px">
+                                                <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Contraportada) !!}" width="100px">
                                                 <!-- <img src="images/{{$libro->Titulo}}" width="100px"> -->
                                             </a>
                                             <div class="product_action_box">
                                                 <ul class="list_none pr_action_btn">
                                                     <li class="add-to-cart"><a onclick="agregar({{$libro->id}});" id="productoId" value="{{$libro->id}}"><i class="icon-basket-loaded"></i> Agregar al carrito</a></li>
                                                     <!-- <li><a href="//bestwebcreator.com/shopwise/demo/shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li> -->
-                                                    <li><a href="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Portada) !!}" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
+                                                    <li><a href="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
                                                     <!-- <li><a href="#"><i class="icon-heart"></i></a></li> -->
                                                 </ul>
                                             </div>
