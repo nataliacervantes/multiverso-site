@@ -9,7 +9,7 @@
                 <div class="product-image">
                     <div class="product_img_box">
                         <img id="product_img" src='{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}' data-zoom-image="assets/images/product_zoom_img1.jpg" alt="product_img1" />
-                        <a href="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" class="product_img_zoom" title="Zoom">
+                        <a href="{!! asset('images/depositofaltantes.mp4') !!}" class="product_img_zoom" title="Zoom">
                             <span class="linearicons-zoom-in"></span>
                         </a>
                     </div>

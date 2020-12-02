@@ -27,15 +27,15 @@ use App\Comentarios;
                                     <div class="product">
                                         <div class="product_img fader" style="height: 400px;">
                                             <a href="{!! url('detalle/'.$libro->id) !!}">
-                                                <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px">
+                                                <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px"
+                                                onmouseover="src='https://www.youtube.com/embed/U-Ooxpz0Eqk';" onmouseout="src='https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada;">
                                                 <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Contraportada) !!}" width="100px">
                                                 <!-- <img src="images/{{$libro->Titulo}}" width="100px"> -->
                                             </a>
                                             <div class="product_action_box">
                                                 <ul class="list_none pr_action_btn">
                                                     <li class="add-to-cart"><a onclick="agregar({{$libro->id}});" id="productoId" value="{{$libro->id}}"><i class="icon-basket-loaded"></i> Agregar al carrito</a></li>
-                                                    <!-- <li><a href="//bestwebcreator.com/shopwise/demo/shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li> -->
-                                                    <li><a href="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
+                                                    <li><a href="{{ asset('images/depositofaltantes.mp4')}}" data-toggle="modal" data-target="#exampleModal" type="button"><i class="icon-magnifier-add"></i></a></li>
                                                     <!-- <li><a href="#"><i class="icon-heart"></i></a></li> -->
                                                 </ul>
                                             </div>
@@ -68,13 +68,6 @@ use App\Comentarios;
                                             <div class="pr_desc">
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
                                             </div>
-                                            <!-- <div class="pr_switch_wrap">
-                                                <div class="product_color_switch">
-                                                    <span class="active" data-color="#87554B"></span>
-                                                    <span data-color="#333333"></span>
-                                                    <span data-color="#DA323F"></span>
-                                                </div>
-                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -84,6 +77,28 @@ use App\Comentarios;
                 </div>
             @endforeach
         </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Título</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    {{-- <iframe width="560" height="315" src="https://www.youtube.com/embed/OTdPL8Gvtp4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> --}}
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/U-Ooxpz0Eqk"></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  {{-- <button type="button" class="btn btn-primary">S</button> --}}
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
     <!-- END SECTION SHOP -->
 @endsection
@@ -91,7 +106,7 @@ use App\Comentarios;
 @section('scripts')
     
     <script>
-       
+     
         // $('.fader').hover(function() {
         //     $(this).find("img").fadeToggle();
         // });
