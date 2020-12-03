@@ -1,10 +1,13 @@
 @php
-use App\Comentarios;
+    use App\Comentarios;
+    // dd(session('key'));
 @endphp
 @extends('files.template')
 
 @section('popup')
-    @include('files.modal_news')
+    @if(session('key') == null)
+        @include('files.modal_news')
+    @endif
 @endsection
 
 @section('content')
@@ -89,9 +92,9 @@ use App\Comentarios;
 @endsection
 
 @section('scripts')
-    
+
     <script>
-       
+
         // $('.fader').hover(function() {
         //     $(this).find("img").fadeToggle();
         // });
@@ -104,7 +107,7 @@ use App\Comentarios;
                 data: {
                     cantidad: 1,
                     id: id,
-                   
+
                 }
             }).done(function(result){
                 // alert(result)

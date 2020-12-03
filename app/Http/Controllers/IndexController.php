@@ -15,4 +15,8 @@ class IndexController extends Controller
         Mail::to('nataliaglezcervantes@gmail.com')->send(new SuscripcionMultiverso($suscripcion));
         return back();
     }
+
+    public function desactivarModal(Request $request){
+        $value = session(['key' => 'la madre']);
+    }
 }
