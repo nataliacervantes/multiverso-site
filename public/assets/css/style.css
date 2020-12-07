@@ -37,6 +37,13 @@ Version      : 1.0
 /*===================================*
   01.GENERAL STYLE
 *===================================*/
+/* @font-face{
+	font-family: 'Serna';
+	src: url('../fonts/1942.eot') format(“embedded-opentype”),
+	url('../fonts/1942.woff') format(“woff”),
+	url('../fonts/1942.ttf') format(“truetype”),
+	url('../fonts/1942.svg') format(“svg”);
+} */
 #app-whatsapp{
 	position: fixed;
 	right: 24px;
@@ -84,12 +91,13 @@ html, body {
 body {
 	background: #ffffff none repeat scroll 0 0;
     color: #687188;
-    font-family: 'Poppins', sans-serif;
+	/* font-family: 'Poppins', sans-serif; */
+	font-family: 'Inconsolata', monospace;
     font-size: 16px;
 }
 h1,h2,h3,h4,h5,h6 {
 	color: #292b2c;
-	font-family: 'Roboto';
+	font-family: 'Inconsolata', monospace;
 }
 p {
 	color:#687188;
@@ -522,7 +530,7 @@ button:focus {
 	right: 0;
 	bottom: 0px;
 	height: 1px;
-	background-color: #FF324D;
+	/* background-color: #FF324D; */
 	z-index: -1;
 }
 .text_white * {
@@ -5065,7 +5073,7 @@ footer .widget_title {
 	padding: 15px;
 }
 .price {
-	color: #FF324D;
+	color: #000000;
 	font-weight: 600;
 }
 .product_price del {

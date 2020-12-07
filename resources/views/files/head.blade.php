@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Editorial 100% mexicana creada por José de la Serna.">
     <meta name="keywords" content="libros, libros, José de la Serna, José, Serna, Jose de la Serna, editorial">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@500&display=swap" rel="stylesheet"> 
+   
     <!-- SITE TITLE -->
     <title>Multiverso Films</title>
     <!-- Favicon Icon -->
@@ -39,7 +41,6 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/responsive.css')}}">
-    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     {{-- <style>
         body {
           font-family: Arial, Helvetica, sans-serif;

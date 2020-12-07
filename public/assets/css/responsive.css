@@ -1643,7 +1643,7 @@ footer .widget_title,
 	display: block;
 }
 .pr_detail .rating_wrap {
-	float: none;
+	float: left;
 	margin-top: 0;
 	margin-bottom: 10px;
 }

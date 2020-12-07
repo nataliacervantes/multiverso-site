@@ -54,11 +54,11 @@
                         <li >
                             <a class="nav-link nav_item" href="{{url('subirFicha')}}" >Subir Ficha </a>
                         </li>
-                        <li><a class="nav-link nav_item" href="contact.html">Contacto</a></li> 
+                        {{-- <li><a class="nav-link nav_item" href="contact.html">Contacto</a></li>  --}}
                     </ul>
                 </div>
                 <ul class="navbar-nav attr-nav align-items-center">
-                    <li><a href="javascript:void(0);" class="nav-link search_trigger"><i class="linearicons-magnifier"></i></a>
+                    {{-- <li><a href="javascript:void(0);" class="nav-link search_trigger"><i class="linearicons-magnifier"></i></a>
                         <div class="search_wrap">
                             <span class="close-search"><i class="ion-ios-close-empty"></i></span>
                             <form>
@@ -66,7 +66,7 @@
                                 <button type="submit" class="search_icon"><i class="ion-ios-search-strong"></i></button>
                             </form>
                         </div><div class="search_overlay"></div>
-                    </li>
+                    </li> --}}
                     <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-cart"></i><span class="cart_count">{{count($carritos)}}</span></a>
                         <div class="cart_box dropdown-menu dropdown-menu-right">
                             <ul class="cart_list">

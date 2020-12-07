@@ -19,7 +19,8 @@
         "mercadopago/dx-php": "2.1.1",
         "nesbot/carbon": "^2.41",
         "paypal/rest-api-sdk-php": "*",
-        "simplesoftwareio/simple-qrcode": "~4"
+        "simplesoftwareio/simple-qrcode": "~4",
+        "zelenin/yii2-semantic-ui": "^2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

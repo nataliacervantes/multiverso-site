@@ -22,7 +22,7 @@
                         <div class="product_price" style="float: left">
                             <span class="price">$ {{number_format($libro->Precio,2)}}</span>
                         </div>
-                        <div class="rating_wrap" style="float: inline-end">
+                        <div class="rating_wrap" style="float: right">
                             <div class="rating">
                                 <div class="product_rate" style="width:{{ (100/5)*round($promedio) }}%">
                                 </div>

@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <style>
+        @font-face{
+            font-family: 'Serna';
+            src: url('../fonts/1942.eot') format(“embedded-opentype”),
+            url('../fonts/1942.woff') format(“woff”),
+            url('../fonts/1942.ttf') format(“truetype”),
+            url('../fonts/1942.svg') format(“svg”);
+        }
+    </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 

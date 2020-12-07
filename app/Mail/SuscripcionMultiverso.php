@@ -39,9 +39,12 @@ class SuscripcionMultiverso extends Mailable
         $fechaActual = strtotime($actual);
 
         if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
-            $cupones->Limite = $cupones->Limite - 1;
-            $cupones->save();
-            return $this->view('emails.suscripcionBienvenida', compact('cupones'));
+            if($cupones){
+                $cupones->Limite = $cupones->Limite - 1;
+                $cupones->save();
+                return $this->view('emails.suscripcionBienvenida', compact('cupones'));
+            }
+            return $this->view('emails.suscripcionBienvenida');
         }
             return $this->view('emails.suscripcionBienvenida');
     }
