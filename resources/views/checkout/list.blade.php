@@ -352,6 +352,12 @@
                 }
             }).done(function(result){
                 // alert(result)
+                if(result == 'nel'){
+                    swal("El cupón que ingresaste no es válido!", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                }
                 var tipo = result.charAt(result.length - 1);
                 // alert(tipo)var 
                 var val = result.split('/');

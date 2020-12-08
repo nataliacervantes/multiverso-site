@@ -44,12 +44,12 @@ class PedidosController extends Controller
     public function cupon(Request $request){
         $cupon = $_GET['cupon'];
         // $cupon = $request->cupon;
-        dd($cupon);
+        // dd($cupon);
         // var_dump($_GET['cupon']);
         // return $cupon;
         // $cupon = 'Welcome2020';
         $cupones = Promociones::where('Cupon',$cupon)->first();
-        dd($cupones);
+        // dd($cupones);
         $fecha = Carbon::now();
         $actual =$fecha->format('Y-m-d'); 
         $fechaInicio = strtotime($cupones->FechaI);
@@ -64,6 +64,8 @@ class PedidosController extends Controller
         if($cupones->Tipo == '3'){
             // dd($actual);
              if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
+                $cupones->Limite = $cupones->Limite-1;
+                $cupones->save();
                 return '3';
              }else{
                  return 'nel';
@@ -71,6 +73,8 @@ class PedidosController extends Controller
             
         }elseif ($cupones->Tipo == '2') {
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
+                $cupones->Limite = $cupones->Limite-1;
+                $cupones->save();
                 return $cupones->Dinero.'/2';
              }else{
                  return 'nel';
@@ -78,6 +82,8 @@ class PedidosController extends Controller
            
         }elseif ($cupones->Tipo == '1') {
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
+                $cupones->Limite = $cupones->Limite-1;
+                $cupones->save();
                 return $cupones->Porcentaje.'/1';
              }else{
                  return 'nel';
