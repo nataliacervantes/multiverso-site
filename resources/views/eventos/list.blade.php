@@ -151,6 +151,10 @@ use Carbon\Carbon;
             }).done(function(result){
                 // alert(result)
                 $("#headerNew").load(" #headerNew");
+                swal("Evento agregado", {
+                    buttons: false,
+                    timer: 3000,
+                });
             });
         }        
     </script>

@@ -23,9 +23,9 @@
                                 <tr>
                                     @if($cart->books_id != null )
                                     <input type="hidden" value="{{$cart->books_id}}" id="idLibro">
-                                        <td class="product-thumbnail"><a href="#"><img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$cart->books->Portada) !!}" ></a></td>
+                                        <td class="product-thumbnail"><a href="#"><img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$cart->books->Portada) !!}" ></a></td>
                                         <td class="product-name" data-title="Producto">{{$cart->books->Titulo}}</td>
-                                        <td class="product-price" data-title="Precio U.">$45.00</td>
+                                        <td class="product-price" data-title="Precio U.">$ {{$cart->books->Precio}}</td>
                                         <td class="product-quantity" data-title="Cantidad"><div class="quantity">
                                             <input type="button" value="-" class="minus" onclick="restaLibro({{$cart->books->id}})">
                                             <input type="text" id='cantidadLibro-{{$cart->books->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
@@ -38,7 +38,8 @@
                                         <td class="product-thumbnail">
                                             <a href="{!! url('detalle/'.$cart->eventos->id) !!}"><img src="{!! asset('assets/images/calendario.png') !!}" alt="cart_thumb1"></a>
                                         </td>
-                                        <td >{{$cart->eventos->Evento}}</td>
+                                        <td class="product-name" data-title="Producto">{{$cart->eventos->Evento}}</td>
+                                        <td class="product-price" data-title="Precio U.">$ {{$cart->eventos->Costo}}</td>
                                         <td class="product-quantity" data-title="Quantity"><div class="quantity">
                                             <input type="button" value="-" class="minus" onclick="restaEvento({{$cart->eventos->id}})">
                                             <input type="text" id='cantidadEvento-{{$cart->eventos->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
@@ -113,21 +114,6 @@
             {{-- Cálculo de total --}}
             <div class="col-md-6">
                 <br><br>
-                    <div class="toggle_info">
-                        <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
-                    </div>
-                    <div class="panel-collapse collapse coupon_form" id="coupon">
-                        <div class="panel-body">
-                            {{-- {!! Form::open(['url'=>'aplicarCupon']) !!} --}}
-                            <div class="coupon field_form input-group">
-                                <input type="text" value="" id="cupon" name="cupon" class="form-control" placeholder="Ingresa tu código..">
-                                <div class="input-group-append">
-                                    <button onclick="aplicarCupon()" class="btn btn-fill-out btn-sm" type="button">Aplicar cupón</button>
-                                </div>
-                            </div>
-                            {{-- {!! Form::close() !!} --}}
-                        </div>
-                    </div>
             	<div class="border p-3 p-md-4">
                     <div class="heading_s1 mb-3">
                         <h6>Carrito</h6>
@@ -150,32 +136,26 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="payment_method">
-                        <div class="heading_s1">
-                            <h4>Payment</h4>
-                        </div>
-                        <div class="payment_option">
-                            <div class="custome-radio">
-                                <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" value="option3" checked="">
-                                <label class="form-check-label" for="exampleRadios3">Direct Bank Transfer</label>
-                                <p data-method="option3" class="payment-text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration. </p>
-                            </div>
-                            <div class="custome-radio">
-                                <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios4" value="option4">
-                                <label class="form-check-label" for="exampleRadios4">Check Payment</label>
-                                <p data-method="option4" class="payment-text">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                            </div>
-                            <div class="custome-radio">
-                                <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios5" value="option5">
-                                <label class="form-check-label" for="exampleRadios5">Paypal</label>
-                                <p data-method="option5" class="payment-text">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
-                            </div>
-                        </div>
-                    </div>
                     <button class="btn btn-fill-out" type="submit">PayPal</button>
                     {!! Form::close() !!}
                     <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
                     <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-mercado" data-toggle="modal">Mercadopago</button>
+                </div>
+                <div class="toggle_info">
+                    <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
+                </div>
+                <div class="panel-collapse collapse coupon_form" id="coupon">
+                    <div class="panel-body">
+                        {{-- {!! Form::open(['url'=>'aplicarCupon','method'=>'GET']) !!} --}}
+                        <div class="coupon field_form input-group">
+                            <input type="text"  id="cupon" name="cupon" class="form-control" placeholder="Ingresa tu código..">
+                            <div class="input-group-append">
+                                <button onclick="aplicarCupon()" class="btn btn-fill-out btn-sm" type="submit">Aplicar cupón</button>
+                                {{--  --}}
+                            </div>
+                        </div>
+                        {{-- {!! Form::close() !!} --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -404,10 +384,10 @@
                     // alert(descuento)
 
                     $('#total').val(total-descuento);
-                    swal("Felcidades, se hizo el descuento del cupón ingresado!", {
-                        buttons: false,
-                        timer: 2000,
-                    });
+                        swal("Felcidades, se hizo el descuento del cupón ingresado!", {
+                            buttons: false,
+                            timer: 2000,
+                        });
                 }
 
                 // $('#envio').val(result);

@@ -84,7 +84,7 @@
                                     @if($libro != null)
                                         <li>
                                             <a href="{{ url('eliminarLibro/'.$libro->id)}}" class="item_remove"><i class="ion-close"></i></a>
-                                            <a href="{!! url('detalle/'.$libro->id) !!}"><img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Portada) !!}" alt="cart_thumb1">{{$libro->Titulo}}</a>
+                                            <a href="{!! url('detalle/'.$libro->id) !!}"><img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" alt="cart_thumb1">{{$libro->Titulo}}</a>
                                             <a href="{!! url('detalle/'.$libro->id) !!}"><span class="cart_quantity"> {{$producto->Cantidad}}x <span class="cart_amount"> <span class="price_symbole">$</span></span>{{$subtotal}}</span></a>
                                         </li>
                                     @elseif($evento != null)
