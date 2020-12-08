@@ -168,7 +168,23 @@ class PayPalController extends Controller
 
     public function deposito(Request $request){
         session_start();
-        // dd($request->all());
+        $validatedData = $request->validate([
+            'Nombre' => 'required',
+            'Apellido' => 'required',
+            'Domicilio' => 'required',
+            'Colonia' => 'required',
+            'Ciudad' => 'required',
+            'Estado' => 'required',
+            'Pais' => 'required',
+            'Cp' => 'required',
+            'Telefono' => 'required',
+            'InfoExtra' => 'required',
+            'Total' => 'required',
+            'Metodo' => 'required',
+            'Envio' => 'required',
+            'Email' =>'required|email',
+        ]);
+        
         $pedido = new Pedidos();
         $pedidos = Pedidos::latest('Folio')->first();
         if($pedidos != null){

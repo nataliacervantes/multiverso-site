@@ -45,6 +45,8 @@ Route::post('subirFichaPago','PedidosController@subirFichaPago');
 Route::get('buscarEvento','EventosController@buscar');
 Route::get('buscarFecha','EventosController@buscarFecha');
 Route::get('aplicarCupon','PedidosController@cupon');
+Route::get('metodosPago','MercadoPagoConntroller@metodosPago');
+Route::any('mercadoPagoPay','MercadoPagoController@mercadoPagoPay');
 Route::get('desactivarModal','IndexController@desactivarModal');
 // Route::group(['middleware' => 'auth'], function () {
 
