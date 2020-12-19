@@ -12,7 +12,7 @@ class IndexController extends Controller
     public function suscripcion(Request $request){
         $suscripcion = Newsletter::create($request->all());
         
-        Mail::to('nataliaglezcervantes@gmail.com')->send(new SuscripcionMultiverso($suscripcion));
+        Mail::to($request->Email)->send(new SuscripcionMultiverso());
         $value = session(['key' => 'la madre']);
         return back();
     }

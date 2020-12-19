@@ -329,9 +329,11 @@ word-break: break-all;
                         </p>
                         <p>De ahora en adelante podremos estar más en contacto.
                             <br>Te haré llegar promociones y notificaciones de mis próximas presentaciones</p>
-                        <p>Te regalo el envio en tu próxima compra, solo ingresa el siguiente cupón 
-                            <br><h3 style="display: block; margin:auto;">{{$cupones->Cupon}}</h3>                            
-                        </p>
+                        @if($cupones != null)
+                            <p>Te regalo el envio en tu próxima compra, solo ingresa el siguiente cupón 
+                                <br><h3 style="display: block; margin:auto;">{{$cupones->Cupon}}</h3>                            
+                            </p>
+                        @endif
                     </td>
                 </tr>
             </table>

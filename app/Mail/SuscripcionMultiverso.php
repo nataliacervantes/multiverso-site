@@ -19,9 +19,9 @@ class SuscripcionMultiverso extends Mailable
      * @return void
      */
     public $msg;
-    public function __construct($message)
+    public function __construct()
     {
-        $this->msg = $message;
+        // $this->msg = $message;
     }
 
     /**
@@ -31,7 +31,7 @@ class SuscripcionMultiverso extends Mailable
      */
     public function build()
     {
-        $cupones = Promociones::where('Correo',1)->first();
+        $cupones = Promociones::where('Correo',1)->where('Tipo',3)->first();
         $fecha = Carbon::now();
         $actual =$fecha->format('Y-m-d'); 
         $fechaInicio = strtotime($cupones->FechaI);

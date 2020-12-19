@@ -145,10 +145,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-fill-out" type="submit">PayPal</button>
-                    {!! Form::close() !!}
-                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
-                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modalMP" data-toggle="modal">Mercadopago</button>
+                    <div class="flex-container">
+                        <button class="btn btn-fill-out flex-item" type="submit">PayPal</button>
+                        {!! Form::close() !!}
+                        <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
+                        <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modalMP" data-toggle="modal">Mercadopago</button>
+                    </div>
+                    
                 </div>
                 <div class="toggle_info">
                     <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
@@ -168,6 +171,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="modal-deposito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -208,86 +212,86 @@
         </div>
 
         
-                <!-- Modal -->
-                <div class="modal fade" id="modalMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Pagar con Tarjeta</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <form action="mercado-pago-pagar" method="post" id="paymentForm">
-                                <div class="modal-body" style="margin: 20px">
-                                    <div class="container_payment" id='container_payment'>
-                                        <div class="form-payment">
-                                            <div class="payment-details">
-                                                @csrf
-                                                <div class="row">
-                                                    <label for="email">E-Mail</label>
-                                                    <input id="email" name="email" type="text" class="form-control">
+        <!-- Modal -->
+        <div class="modal fade" id="modalMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Pagar con Tarjeta</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="mercado-pago-pagar" method="post" id="paymentForm">
+                        <div class="modal-body" style="margin: 20px">
+                            <div class="container_payment" id='container_payment'>
+                                <div class="form-payment">
+                                    <div class="payment-details">
+                                        @csrf
+                                        <div class="row">
+                                            <label for="email">E-Mail</label>
+                                            <input id="email" name="email" type="text" class="form-control">
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="form-group col-sm-8">
+                                                <label for="cardholderName">Nombre que aparece en la tarjeta</label>
+                                                <input id="cardholderName" data-checkout="cardholderName" type="text" class="form-control">
+                                            </div>
+                                            <div class="form-group col-sm-3" style="margin-left: 15px">
+                                                <label for="">Fecha de Expiración</label>
+                                                <div class="input-group expiration-date">
+                                                    <input type="text" class="form-control" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth"
+                                                        onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+                                                    <input type="text" class="form-control" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear"
+                                                        onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
                                                 </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="form-group col-sm-8">
-                                                        <label for="cardholderName">Nombre que aparece en la tarjeta</label>
-                                                        <input id="cardholderName" data-checkout="cardholderName" type="text" class="form-control">
-                                                    </div>
-                                                    <div class="form-group col-sm-3" style="margin-left: 15px">
-                                                        <label for="">Fecha de Expiración</label>
-                                                        <div class="input-group expiration-date">
-                                                            <input type="text" class="form-control" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth"
-                                                                onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                                            <input type="text" class="form-control" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear"
-                                                                onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-sm-8">
-                                                        <label for="cardNumber">Número de la tarjeta</label>
-                                                        <input type="text" class="form-control input-background" id="cardNumber" data-checkout="cardNumber"
-                                                            onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                                    </div>
-                                                    <div class="form-group col-sm-3" style="margin-left: 15px">
-                                                        <label for="securityCode">CVV</label>
-                                                        <input id="securityCode" data-checkout="securityCode" type="text" class="form-control"
-                                                            onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                                    </div>
-                                                    <div id="issuerInput" class="form-group col-sm-12 hidden">
-                                                        <label for="issuer">Banco</label>
-                                                        <select id="issuer" name="issuer" data-checkout="issuer" class="form-control"></select>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        <label for="installments">Pagos</label>
-                                                        <select type="text" id="installments" name="installments" class="form-control"></select>
-                                                    </div>
-                                                    <div class="form-group col-sm-12">
-                                                        {{-- <input type="hidden" name="idPedido" id="idPedido"  value="{{ $pedido->id}}">
-                                                        <input type="hidden" name="idDomicilio" id="modalDomicilio" value="">
-                                                        <input type="hidden"  name="idTipoPago" id="modalTipoPago" value="" >
-                                                        <input type="hidden" name="folio" id="folio" value="{{ $pedido->Folio }}">
-                                                        <input type="hidden" value="{{ $tc }}" id="tc" name="tipoCambio">
-                                                        <input type="hidden" name="facturacion" id="facturacion" value="">
-                                                        <input type="hidden" name="idFacturacion" id="idFacturacion" value="">
-                                                        <input type="hidden" name="transactionAmount" id="amount" value="{{ $total }}" />
-                                                        <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
-                                                        <input type="hidden" name="description" id="description" value="TecnoAbastos"/> --}}
-                                                    </div>
-                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-8">
+                                                <label for="cardNumber">Número de la tarjeta</label>
+                                                <input type="text" class="form-control input-background" id="cardNumber" data-checkout="cardNumber"
+                                                    onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+                                            </div>
+                                            <div class="form-group col-sm-3" style="margin-left: 15px">
+                                                <label for="securityCode">CVV</label>
+                                                <input id="securityCode" data-checkout="securityCode" type="text" class="form-control"
+                                                    onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+                                            </div>
+                                            <div id="issuerInput" class="form-group col-sm-12 hidden">
+                                                <label for="issuer">Banco</label>
+                                                <select id="issuer" name="issuer" data-checkout="issuer" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group col-sm-12">
+                                                <label for="installments">Pagos</label>
+                                                <select type="text" id="installments" name="installments" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group col-sm-12">
+                                                {{-- <input type="hidden" name="idPedido" id="idPedido"  value="{{ $pedido->id}}">
+                                                <input type="hidden" name="idDomicilio" id="modalDomicilio" value="">
+                                                <input type="hidden"  name="idTipoPago" id="modalTipoPago" value="" >
+                                                <input type="hidden" name="folio" id="folio" value="{{ $pedido->Folio }}">
+                                                <input type="hidden" value="{{ $tc }}" id="tc" name="tipoCambio">
+                                                <input type="hidden" name="facturacion" id="facturacion" value="">
+                                                <input type="hidden" name="idFacturacion" id="idFacturacion" value="">
+                                                <input type="hidden" name="transactionAmount" id="amount" value="{{ $total }}" />
+                                                <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
+                                                <input type="hidden" name="description" id="description" value="TecnoAbastos"/> --}}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary ">Pagar</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary ">Pagar</button>
+                        </div>
+                    </form>
                 </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- END SECTION SHOP -->
