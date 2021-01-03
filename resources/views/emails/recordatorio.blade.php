@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -313,36 +312,27 @@ word-break: break-all;
 }
 
 </style>
+
 <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
     <header class="header">
         <img src="{{ asset('images/multiversologo.jpg') }}" class="logo" alt="Multiverso">
     </header>
-    <!-- Email Body -->
+<!-- Email Body -->
     <tr>
         <td class="body" width="100%" cellpadding="0" cellspacing="0">
             <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
             <!-- Body content -->
                 <tr>
                     <td class="content-cell">
-                        <p>¡Gracias por suscribirte!<br>
+                        <p>José, {!! $msg['Titulo'] !!} llegó al límite de su stock, será mejor que adquieras más<br>
                         </p>
-                        {{-- <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->generate('Embed me into an e-mail!')) !!} "> --}}
-                        <p>De ahora en adelante podremos estar más en contacto.
-                            <img src="data:image/png;base64, {{ base64_encode($message->embedData(QrCode::format('png')->generate('me lleva la verga'), 'QrCode.png', 'images/png')) }} ">
-                            <br>Te haré llegar promociones y notificaciones de mis próximas presentaciones</p>
-                            {{-- <img src="{!!$message->embedData(QrCode::format('png')->generate('me lleva la verga'), 'QrCode.png', 'images/png')!!}"> --}}
-                        {{-- @if($cupones != null)
-                            <p>Te regalo el envio en tu próxima compra, solo ingresa el siguiente cupón 
-                                <br><h3 style="display: block; margin:auto;">{{$cupones->Cupon}}</h3>                            
-                            </p>
-                        @endif --}}
+                        
+                        <p>XoXo chiquitito bb</p>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
-    
 </table>
-
 </body>
 </html>

@@ -313,36 +313,9 @@ word-break: break-all;
 }
 
 </style>
-<table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-    <header class="header">
-        <img src="{{ asset('images/multiversologo.jpg') }}" class="logo" alt="Multiverso">
-    </header>
-    <!-- Email Body -->
-    <tr>
-        <td class="body" width="100%" cellpadding="0" cellspacing="0">
-            <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-            <!-- Body content -->
-                <tr>
-                    <td class="content-cell">
-                        <p>¡Gracias por suscribirte!<br>
-                        </p>
-                        {{-- <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->generate('Embed me into an e-mail!')) !!} "> --}}
-                        <p>De ahora en adelante podremos estar más en contacto.
-                            <img src="data:image/png;base64, {{ base64_encode($message->embedData(QrCode::format('png')->generate('me lleva la verga'), 'QrCode.png', 'images/png')) }} ">
-                            <br>Te haré llegar promociones y notificaciones de mis próximas presentaciones</p>
-                            {{-- <img src="{!!$message->embedData(QrCode::format('png')->generate('me lleva la verga'), 'QrCode.png', 'images/png')!!}"> --}}
-                        {{-- @if($cupones != null)
-                            <p>Te regalo el envio en tu próxima compra, solo ingresa el siguiente cupón 
-                                <br><h3 style="display: block; margin:auto;">{{$cupones->Cupon}}</h3>                            
-                            </p>
-                        @endif --}}
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    
-</table>
-
+    <div class="visible-print text-center">
+        {!! QrCode::format('png')->size(300)->generate(Request::url()); !!}
+        <p>Scan me to return to the original page.</p>
+    </div>
 </body>
 </html>

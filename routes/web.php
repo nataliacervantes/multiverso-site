@@ -48,6 +48,10 @@ Route::get('aplicarCupon','PedidosController@cupon');
 Route::get('metodosPago','MercadoPagoConntroller@metodosPago');
 Route::any('mercadoPagoPay','MercadoPagoController@mercadoPagoPay');
 Route::get('desactivarModal','IndexController@desactivarModal');
+Route::get('boleto',function(){
+    $pdf = PDF::loadView('emails.boleto_virutal');
+    $pdf->download();
+});
 // Route::group(['middleware' => 'auth'], function () {
 
 // });

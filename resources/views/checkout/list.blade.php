@@ -40,14 +40,15 @@
                                         </td>
                                         <td class="product-name" data-title="Producto">{{$cart->eventos->Evento}}</td>
                                         <td class="product-price" data-title="Precio U.">$ {{$cart->eventos->Costo}}</td>
-                                        <td class="product-quantity" data-title="Quantity"><div class="quantity">
-                                            <input type="button" value="-" class="minus" onclick="restaEvento({{$cart->eventos->id}})">
-                                            <input type="text" id='cantidadEvento-{{$cart->eventos->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
-                                            <input type="button" value="+" class="plus" onclick="sumaEvento({{$cart->eventos->id}})">
-                                            </div></td>
+                                        <td class="product-quantity" data-title="Quantity">
+                                            <div class="quantity">
+                                                <input type="button" value="-" class="minus" onclick="restaEvento({{$cart->eventos->id}})">
+                                                <input type="text" id='cantidadEvento-{{$cart->eventos->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
+                                                <input type="button" value="+" class="plus" onclick="sumaEvento({{$cart->eventos->id}})">
+                                            </div>
+                                        </td>
                                             <input type="hidden" id="costo-{{$cart->eventos->id}}" value="{{$cart->eventos->Costo}}">
                                         <td class="product-price" data-title="Price"><input value="$ {{$cart->Subtotal}}" type="text" id="precioEvento-{{$cart->eventos->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
-                                      
                                     @endif
                                 </div></td>
                                     <td class="product-subtotal"  id="totalEvento" data-title="Total"></td> 
@@ -83,6 +84,7 @@
             		<h4>Datos de Envío</h4>
                 </div>
                 {!! Form::open(['url'=>'payWithPaypal']) !!}
+                    <input type="hidden" name="address" id="address" value="0">
                     <div class="form-group">
                         <input type="text" required class="form-control" name="Nombre" id="Nombre"  placeholder="Nombre *">
                     </div>
@@ -90,35 +92,38 @@
                         <input type="text" required class="form-control" name="Apellido" id="Apellido" placeholder="Apellido *">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="Domicilio" name="Domicilio" required="" placeholder="Domicilio (Calle & Número) *">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" required class="form-control" name="Colonia" id="Colonia" placeholder="Colonia *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" id="Ciudad" name="Ciudad" placeholder="Ciudad *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" name="Estado" id="Estado" placeholder="Estado *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" name="Pais" id="pais" placeholder="País *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" name="CP" id="CP" placeholder="Código Postal *">
-                    </div>
-                    <div class="form-group">
                         <input class="form-control" required type="text" name="Telefono" id="Telefono" placeholder="Teléfono/Celular *">
                     </div>
                     <div class="form-group">
                         <input class="form-control" required type="text" name="Email"  id="Email" placeholder="Email *">
                     </div>
-                    <div class="heading_s1">
-                        <h4>Información Adicional</h4>
-                    </div>
-                    <div class="form-group mb-0">
-                        <textarea rows="5" class="form-control" name="InfoExtra" id="InfoExtra" style="resize: none" placeholder="Dedica el libro!"></textarea>
-                    </div>
+                    @if(isset($costoEnvio))
+                        <input type="hidden" name="address" id="address" value="1">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="Domicilio" name="Domicilio" required="" placeholder="Domicilio (Calle & Número) *">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" required class="form-control" name="Colonia" id="Colonia" placeholder="Colonia *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" id="Ciudad" name="Ciudad" placeholder="Ciudad *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" name="Estado" id="Estado" placeholder="Estado *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" name="Pais" id="pais" placeholder="País *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" name="CP" id="CP" placeholder="Código Postal *">
+                        </div>
+                        <div class="heading_s1">
+                            <h4>Información Adicional</h4>
+                        </div>
+                        <div class="form-group mb-0">
+                            <textarea rows="5" class="form-control" name="InfoExtra" id="InfoExtra" style="resize: none" placeholder="Dedica el libro!"></textarea>
+                        </div>
+                    @endif
             </div>
             {{-- Cálculo de total --}}
             <div class="col-md-6">
@@ -135,8 +140,11 @@
                                     <td class="cart_total_amount"><input id="subtotal" type="text" readonly style="border: 0; font-weight: 600; text-align: center"></td>
                                 </tr>
                                 <tr>
-                                    <td class="cart_total_label">Costo de Envío</td>
-                                    <td class="cart_total_amount"><input id="envio" name="Envio" type="text" style="border: 0; text-align: center; font-weight: 600" readonly></td>
+                                    @if(isset($costoEnvio))
+                                        <input type="hidden" name="address" id="address" value="1">
+                                        <td class="cart_total_label">Costo de Envío</td>
+                                        <td class="cart_total_amount"><input id="envio" name="Envio" type="text" style="border: 0; text-align: center; font-weight: 600" readonly></td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="cart_total_label">Total</td>
@@ -147,7 +155,7 @@
                     </div>
                     <div class="flex-container">
                         <button class="btn btn-fill-out flex-item" type="submit">PayPal</button>
-                        {!! Form::close() !!}
+                {!! Form::close() !!}
                         <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
                         <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modalMP" data-toggle="modal">Mercadopago</button>
                     </div>
@@ -171,7 +179,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="modal-deposito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -203,6 +210,7 @@
                         {!! Form::hidden('telefono', '', ['id'=>'telefono']) !!}
                         {!! Form::hidden('envio', '', ['id'=>'Envio']) !!}
                         {!! Form::hidden('cp', '', ['id'=>'cp']) !!}
+                        {!! Form::hidden('addressM','', ['id'=>'AddressM']) !!}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
@@ -210,8 +218,13 @@
                 </div>
             </div>
         </div>
-
-        
+        @php
+            use SimpleSoftwareIO\QrCode\Facades\QrCode;
+        @endphp
+        <div class="visible-print text-center">
+            {!! QrCode::size(100)->generate(Request::url()); !!}
+            <p>Scan me to return to the original page.</p>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="modalMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -299,88 +312,7 @@
 @endsection
 
 @section('scripts')
-    <script>
-        // function sumaLibro(id){
-        //     var cantidad = $('#cantidadLibro-'+id).val();
-        //     // alert(cantidad)
-        //     var sum = Number(cantidad) + 1;
-        //     var price = $('#precio-'+id).val();
-        //     var sub = sum * Number(price);
-          
-        //     $('#precioLibro-'+id).val(Number(sub));
-            
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(price) + parseInt(subtotal);
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // function sumaEvento(id){
-        //     var cantidad = $('#cantidadEvento-'+id).val();
-        //     var sum = parseInt(cantidad) + 1;
-        //     var price = $('#costo-'+id).val();
-        //     var sub = sum * price;
-        //     // alert(sub)
-        //     $('#precioEvento-'+id).val(sub);
-
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(price) + parseInt(subtotal);
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // function restaLibro(id){
-        //     var cantidad = $('#cantidadLibro-'+id).val();
-        //     var resta = parseInt(cantidad) - 1;
-        //     var price = $('#precio-'+id).val();
-        //     var sub = resta * price;
-        //     // alert(sub)
-        //     $('#precioLibro-'+id).val(sub);
-
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(subtotal) - parseInt(price) ;
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // function restaEvento(id){
-        //     var cantidad = $('#cantidadEvento-'+id).val();
-        //     var resta = parseInt(cantidad) - 1;
-        //     var price = $('#costo-'+id).val();
-        //     var sub = resta * price;
-        //     // alert(sub)
-        //     $('#precioEvento-'+id).val(sub);
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(subtotal) - parseInt(price);
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // $(document).ready(function(){
-        //     $('#subtotal').val(parseInt($('#totalHeader').val()));
-        // })
-
-        // $('#pais').on('change',function(){
-        //     var pais = $('#pais').val();
-        //     // alert(pais)
-        //     $.ajax({
-        //         url: "{{url('calcularEnvio') }}",
-        //         method: 'GET',
-        //         data: {
-        //             pais: pais,
-        //         }
-        //     }).done(function(result){
-        //         // alert(result)
-        //         $('#envio').val(result);
-        //         var subtotal = $('#subtotal').val();
-        //         var envio = $('#envio').val();
-        //         var total = parseInt(subtotal) + parseInt(envio);
-        //         // alert(total)
-        //         $('#total').val(total);
-        //         // $("#headerNew").load(" #headerNew");
-        //     });
-        // })
-    </script>
+    
      {{-- Scripts para Paypal --}}
      <script src="https://www.paypalobjects.com/api/checkout.js"></script>
      <script>
@@ -397,6 +329,7 @@
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function sumaEvento(id){
             var cantidad = $('#cantidadEvento-'+id).val();
@@ -410,10 +343,18 @@
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function restaLibro(id){
             var cantidad = $('#cantidadLibro-'+id).val();
             var resta = parseInt(cantidad) - 1;
+            
+            if(cantidad == 0){
+                alert('simon')
+               $.get('eliminarLibro', function(result){
+
+               })
+            }
             var price = $('#precio-'+id).val();
             var sub = resta * price;
             // alert(sub)
@@ -423,6 +364,7 @@
             var sumarSubtotal = parseInt(subtotal) - parseInt(price) ;
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function restaEvento(id){
             var cantidad = $('#cantidadEvento-'+id).val();
@@ -435,6 +377,7 @@
             var sumarSubtotal = parseInt(subtotal) - parseInt(price);
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function aplicarCupon(){
             var cupon = $('#cupon').val();
@@ -526,6 +469,7 @@
         })
         $(document).ready(function(){
             $('#subtotal').val(parseInt($('#totalHeader').val()));
+            $('#total').val(parseInt($('#totalHeader').val()));
         })
         $('#pais').on('change',function(){
             var pais = $('#pais').val();
@@ -642,6 +586,7 @@
             var email = $('#Email').val();
             var infoExtra = $('#InfoExtra').val();
             var envio = $('#envio').val();
+            var address = $('#address').val();
             // var total = $('#Total').val();
 
             $('#nombre').val(nombre);
@@ -657,6 +602,7 @@
             $('#infoextra').val(infoExtra);
             $('#Total').val(total);
             $('#Envio').val(envio);
+            $('#AddressM').val(address);
         })
     </script>
 @endsection

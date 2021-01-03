@@ -31,10 +31,10 @@
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
 <script src="https://kit.fontawesome.com/e00e4647cf.js" crossorigin="anonymous"></script>
-<script
+{{-- <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous"></script> --}}
 {{-- <script src="semantic/dist/semantic.min.js"></script>
 <script src="{{asset('semantic-ui/semantic.min.js')}}"></script> --}}
 {{-- <script>

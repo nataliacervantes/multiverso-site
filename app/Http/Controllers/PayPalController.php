@@ -14,6 +14,7 @@ use PayPal\Api\ShippingAddress;
 use App\Carrito;
 use App\Pedidos;
 use App\BookPedido;
+use App\EventPedido;
 use App\Mail\ConfirmacionDePago;
 use App\Mail\ConfirmacionDePedido;
 use PayPal\Api\Amount;
@@ -34,24 +35,42 @@ class PayPalController extends Controller
         }else{
             $pedido->Folio = 000000;
         }
-        
-        $pedido->session = session_id();
-        $pedido->EstatusPago = 'Pendiente';
-        $pedido->EstatusEnvio = 'Pendiente';
-        $pedido->Nombre = $request->Nombre;
-        $pedido->Apellido = $request->Apellido;
-        $pedido->Domicilio = $request->Domicilio;
-        $pedido->Colonia = $request->Colonia;
-        $pedido->Ciudad = $request->Ciudad;
-        $pedido->Estado = $request->Estado;
-        $pedido->Pais = $request->Pais;
-        $pedido->CP = $request->CP;
-        $pedido->Email = $request->Email;
-        $pedido->Telefono = $request->Telefono;
-        $pedido->InfoExtra = $request->InfoExtra;
-        $pedido->Total = $request->Total;
-        $pedido->Envio = $request->Envio;
-
+        // dd($request->all());
+        if($request->address ==1){
+            $pedido->session = session_id();
+            $pedido->EstatusPago = 'Pendiente';
+            $pedido->EstatusEnvio = 'Pendiente';
+            $pedido->Nombre = $request->Nombre;
+            $pedido->Apellido = $request->Apellido;
+            $pedido->Domicilio = $request->Domicilio;
+            $pedido->Colonia = $request->Colonia;
+            $pedido->Ciudad = $request->Ciudad;
+            $pedido->Estado = $request->Estado;
+            $pedido->Pais = $request->Pais;
+            $pedido->CP = $request->CP;
+            $pedido->Email = $request->Email;
+            $pedido->Telefono = $request->Telefono;
+            $pedido->InfoExtra = $request->InfoExtra;
+            $pedido->Total = $request->Total;
+            $pedido->Envio = $request->Envio;
+        }else{
+            $pedido->session = session_id();
+            $pedido->EstatusPago = 'Pendiente';
+            $pedido->EstatusEnvio = 'Pendiente';
+            $pedido->Nombre = $request->Nombre;
+            $pedido->Apellido = $request->Apellido;
+            $pedido->Domicilio = "NA";
+            $pedido->Colonia = "NA";
+            $pedido->Ciudad = "NA";
+            $pedido->Estado = "NA";
+            $pedido->Pais = "NA";
+            $pedido->CP = 00000;
+            $pedido->Email = $request->Email;
+            $pedido->Telefono = $request->Telefono;
+            $pedido->InfoExtra = "NA";
+            $pedido->Total = $request->Total;
+            $pedido->Envio = 0;
+        }
         // dd($pedido);
         $pedido->save();
 
@@ -151,11 +170,16 @@ class PayPalController extends Controller
                     $pivot->save();
                     $carrito->delete();
                 }elseif($carrito->eventos_id != null){
+                    $pivot = new EventPedido();
+                    $pivot->events_id = $carrito->eventos_id;
+                    $pivot->pedidos_id = $pedido->id;
+                    $pivot->Cantidad =$carrito->Cantidad;
+                    $pivot->save();
                     $carrito->delete();
                 }
             }
 
-            Mail::to('nataliaglezcervantes@gmail.com')->send(new ConfirmacionDePago($pedido));
+            Mail::to($pedido->Email)->send(new ConfirmacionDePago($pedido));
           
             session_destroy();
             return view('checkout.confirmacioPago');
@@ -168,23 +192,7 @@ class PayPalController extends Controller
 
     public function deposito(Request $request){
         session_start();
-        $validatedData = $request->validate([
-            'Nombre' => 'required',
-            'Apellido' => 'required',
-            'Domicilio' => 'required',
-            'Colonia' => 'required',
-            'Ciudad' => 'required',
-            'Estado' => 'required',
-            'Pais' => 'required',
-            'Cp' => 'required',
-            'Telefono' => 'required',
-            'InfoExtra' => 'required',
-            'Total' => 'required',
-            'Metodo' => 'required',
-            'Envio' => 'required',
-            'Email' =>'required|email',
-        ]);
-        
+        // dd($request->all());
         $pedido = new Pedidos();
         $pedidos = Pedidos::latest('Folio')->first();
         if($pedidos != null){
@@ -192,33 +200,83 @@ class PayPalController extends Controller
         }else{
             $pedido->Folio = 000000;
         }
-        $pedido->session = session_id();
-        $pedido->EstatusPago = 'Pendiente';
-        $pedido->EstatusEnvio = 'Pendiente';
-        $pedido->Nombre = $request->nombre;
-        $pedido->Apellido = $request->apellido;
-        $pedido->Domicilio = $request->domicilio;
-        $pedido->Colonia = $request->colonia;
-        $pedido->Ciudad = $request->ciudad;
-        $pedido->Estado = $request->estado;
-        $pedido->Pais = $request->pais;
-        $pedido->CP = $request->cp;
-        $pedido->Email = $request->email;
-        $pedido->Telefono = $request->telefono;
-        $pedido->InfoExtra = $request->infoextra;
-        $pedido->Total = $request->total;
-        $pedido->Envio = $request->envio;
-        $pedido->Metodo = 'Depósito';
+
+        if($request->addressM ==1){
+            $validatedData = $request->validate([
+                    'nombre' => 'required',
+                    'apellido' => 'required',
+                    'domicilio' => 'required',
+                    'colonia' => 'required',
+                    'ciudad' => 'required',
+                    'estado' => 'required',
+                    'pais' => 'required',
+                    'cp' => 'required',
+                    'telefono' => 'required',
+                    'infoExtra' => 'required',
+                    'total' => 'required',
+                    'metodo' => 'required',
+                    'envio' => 'required',
+                    'email' =>'required|email',
+            ]);
+            $pedido->session = session_id();
+            $pedido->EstatusPago = 'Pendiente';
+            $pedido->EstatusEnvio = 'Pendiente';
+            $pedido->Nombre = $request->nombre;
+            $pedido->Apellido = $request->apellido;
+            $pedido->Domicilio = $request->domicilio;
+            $pedido->Colonia = $request->colonia;
+            $pedido->Ciudad = $request->ciudad;
+            $pedido->Estado = $request->estado;
+            $pedido->Pais = $request->pais;
+            $pedido->CP = $request->cp;
+            $pedido->Email = $request->email;
+            $pedido->Telefono = $request->telefono;
+            $pedido->InfoExtra = $request->infoextra;
+            $pedido->Total = $request->total;
+            $pedido->Envio = $request->envio;
+            $pedido->Metodo = 'Depósito';
+        }else{
+            $validatedData = $request->validate([
+                    'nombre' => 'required',
+                    'apellido' => 'required',                    
+                    'telefono' => 'required',
+                    'email' =>'required|email',
+                ]);
+
+            $pedido->session = session_id();
+            $pedido->EstatusPago = 'Pendiente';
+            $pedido->EstatusEnvio = 'Pendiente';
+            $pedido->Nombre = $request->nombre;
+            $pedido->Apellido = $request->apellido;
+            $pedido->Domicilio = "NA";
+            $pedido->Colonia = "NA";
+            $pedido->Ciudad = "NA";
+            $pedido->Estado = "NA";
+            $pedido->Pais = "NA";
+            $pedido->CP = 00000;
+            $pedido->Email = $request->email;
+            $pedido->Telefono = $request->telefono;
+            $pedido->InfoExtra = "NA";
+            $pedido->Total = $request->total;
+            $pedido->Envio = 0;
+            $pedido->Metodo = 'Depósito';
+        }
         // dd($pedido);
         $pedido->save();
+
         $promociones = Promociones::where('Cupon',$request->cupon)->first();
-        $promociones->Limite = $promociones->Limite - 1 ;
-        Mail::to('nataliaglezcervantes@gmail.com')->send(new ConfirmacionDePedido($pedido));
+        
+        if($promociones != null){
+            $promociones->Limite = $promociones->Limite - 1 ;
+           
+        }
+
         $carritos = Carrito::where('session_estatus',session_id())->get();
 
         foreach($carritos as $carrito){
             if($carrito->books_id != null){
                 // dD($carrito);
+                Mail::to($request->email)->send(new ConfirmacionDePedido($pedido));
                 $pivot = new BookPedido();
                 $pivot->books_id = $carrito->books_id;
                 $pivot->pedidos_id = $pedido->id;
@@ -227,6 +285,12 @@ class PayPalController extends Controller
                 // dd($pivot);
                 $carrito->delete();
             }elseif($carrito->eventos_id != null){
+                Mail::to($request->email)->send(new ConfirmacionDePedido($pedido));
+                $pivot = new EventPedido();
+                $pivot->events_id = $carrito->eventos_id;
+                $pivot->pedidos_id = $pedido->id;
+                $pivot->Cantidad =$carrito->Cantidad;
+                $pivot->save();
                 $carrito->delete();
             }
         }
