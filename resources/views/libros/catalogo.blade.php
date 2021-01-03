@@ -28,14 +28,15 @@
                             @foreach ($autor->Libros as $libro)
                                 <div class="item" >
                                     <div class="product">
-                                        <div class="product_img fader" style="height: 400px;">
+                                        <div class="product_img" style="height: 400px;">
                                             <a href="{!! url('detalle/'.$libro->id) !!}">
-                                                <img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$libro->Portada) !!}" width="100px">
+                                                <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px">
+                                                {{-- <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px"> --}}
                                             </a>
                                             <div class="product_action_box">
                                                 <ul class="list_none pr_action_btn">
                                                     <li class="add-to-cart"><a onclick="agregar({{$libro->id}});" id="productoId" value="{{$libro->id}}"><i class="icon-basket-loaded"></i> Agregar al carrito</a></li>
-                                                    <li><button data-toggle="modal" data-target="#exampleModal" data-whatever="getbootstrap" type="button"><i class="icon-magnifier-add"></i></button></li>
+                                                    <li><a type="button"><i class="icon-magnifier-add"></i></a></li>
                                                     <!-- <li><a href="#"><i class="icon-heart"></i></a></li> -->
                                                 </ul>
                                             </div>
@@ -77,34 +78,6 @@
                 </div>
             @endforeach
         </div>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Recipient:</label>
-                      <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label">Message:</label>
-                      <textarea class="form-control" id="message-text"></textarea>
-                    </div>z
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Send message</button>
-                </div>
-              </div>
-            </div>
-          </div>
     </div>
     <!-- END SECTION SHOP -->
 @endsection
