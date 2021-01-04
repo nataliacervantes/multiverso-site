@@ -12,6 +12,7 @@
 
 @section('content')
     <!-- START SECTION SHOP -->
+ 
     <div class="section">
         <div class="container">
             @foreach ($autores as $autor)
@@ -27,17 +28,15 @@
                         <div class="product_slider carousel_slider owl-carousel owl-theme nav_style1" data-loop="true" data-dots="false" data-nav="true" data-margin="20" data-responsive='{"0":{"items": "1"}, "481":{"items": "2"}, "768":{"items": "3"}, "1199":{"items": "4"}}'>
                             @foreach ($autor->Libros as $libro)
                                 <div class="item" >
-                                    <div class="product">
+                                    <div class="product" id="vrg-{{$libro->id}}">
                                         <div class="product_img" style="height: 400px;">
                                             <a href="{!! url('detalle/'.$libro->id) !!}">
-                                                <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px">
-                                                {{-- <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px"> --}}
+                                                <img id="img-{{$libro->id}}" src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px">
                                             </a>
                                             <div class="product_action_box">
                                                 <ul class="list_none pr_action_btn">
                                                     <li class="add-to-cart"><a onclick="agregar({{$libro->id}});" id="productoId" value="{{$libro->id}}"><i class="icon-basket-loaded"></i> Agregar al carrito</a></li>
-                                                    <li><a type="button"><i class="icon-magnifier-add"></i></a></li>
-                                                    <!-- <li><a href="#"><i class="icon-heart"></i></a></li> -->
+                                                    <li><a onclick="averquepedo({{$libro->id}});" ><i class="icon-magnifier-add"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -77,12 +76,22 @@
                     </div>
                 </div>
             @endforeach
+            <div id="card"> 
+                <div> 
+                  Front content
+                </div> 
+                <div>
+                  Back content
+                </div> 
+              </div>
         </div>
     </div>
     <!-- END SECTION SHOP -->
 @endsection
 
 @section('scripts')
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script>
         function agregar(id){
             $.ajax({
@@ -113,14 +122,34 @@
                 }
             });
         }
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('whatever') // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this)
-            modal.find('.modal-title').text('New message to ' + recipient)
-            modal.find('.modal-body input').val(recipient)
-        })
+        function averquepedo(id){
+            // alert(id)
+            // $("#img-"+id).flip();
+            $("#card").flip('toggle');
+            // $.get('{{url("getDataLibro")}}/'+id, function(returnData){
+            //     // alert(returnData)
+
+            //     var portada = returnData;
+            //     // alert(portada)
+            //     if (document.getElementById("img-"+id).src == "https://admin.multiversolibreria.com/img/Portadas/"+portada) {
+            //         $.get('{{url("getDataContra")}}/'+id, function(contra){
+            //             $('#img-'+id).prop('src','images/profile.png');
+            //             // $('#precio-'+id).val();
+            //         })
+            //     }
+            // });
+            // // 
+            // if (document.getElementById("img").src == "https://admin.multiversolibreria.com/img/Portadas/"+portada) 
+            // {
+            //     // 
+            //     
+            //     alert(portada)
+            //     // document.getElementById("img").src = "";
+            // }
+            // else 
+            // {
+            //     document.getElementById("img").src = "https://admin.multiversolibreria.com/img/Portadas/"+portada;
+            // }
+        }
     </script>
 @endsection

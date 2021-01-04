@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a757bac4bfbcf9495e9a47c9b542c85",
+    "content-hash": "08f00bc59a71b1d51896ef0adac9ec6d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1123,16 +1123,16 @@
         },
         {
             "name": "dompdf/dompdf",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "e53da1ccea4340832d0b864e383c4e2b2d141ca3"
+                "reference": "45d260f2f6c6a542e0db3459470374c986a46d93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/e53da1ccea4340832d0b864e383c4e2b2d141ca3",
-                "reference": "e53da1ccea4340832d0b864e383c4e2b2d141ca3",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/45d260f2f6c6a542e0db3459470374c986a46d93",
+                "reference": "45d260f2f6c6a542e0db3459470374c986a46d93",
                 "shasum": ""
             },
             "require": {
@@ -1189,9 +1189,9 @@
             "homepage": "https://github.com/dompdf/dompdf",
             "support": {
                 "issues": "https://github.com/dompdf/dompdf/issues",
-                "source": "https://github.com/dompdf/dompdf/tree/v1.0.0"
+                "source": "https://github.com/dompdf/dompdf/tree/v1.0.1"
             },
-            "time": "2020-12-24T19:58:01+00:00"
+            "time": "2020-12-31T13:25:19+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -2303,16 +2303,16 @@
         },
         {
             "name": "mercadopago/dx-php",
-            "version": "2.1.1",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mercadopago/dx-php.git",
-                "reference": "b17ca2d555512b6489067e3166bb4beaab206cff"
+                "reference": "2ea4d51f6b29d568b3a06d430114467fc2ab6b90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mercadopago/dx-php/zipball/b17ca2d555512b6489067e3166bb4beaab206cff",
-                "reference": "b17ca2d555512b6489067e3166bb4beaab206cff",
+                "url": "https://api.github.com/repos/mercadopago/dx-php/zipball/2ea4d51f6b29d568b3a06d430114467fc2ab6b90",
+                "reference": "2ea4d51f6b29d568b3a06d430114467fc2ab6b90",
                 "shasum": ""
             },
             "require": {
@@ -2361,9 +2361,9 @@
             "description": "Mercado Pago PHP SDK",
             "homepage": "https://github.com/mercadopago/dx-php",
             "support": {
-                "source": "https://github.com/mercadopago/dx-php/tree/2.1.1"
+                "source": "https://github.com/mercadopago/dx-php/tree/2.2.1"
             },
-            "time": "2020-09-10T20:17:15+00:00"
+            "time": "2020-11-13T21:50:52+00:00"
         },
         {
             "name": "monolog/monolog",

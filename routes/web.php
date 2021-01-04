@@ -48,6 +48,8 @@ Route::get('aplicarCupon','PedidosController@cupon');
 Route::get('metodosPago','MercadoPagoConntroller@metodosPago');
 Route::any('mercadoPagoPay','MercadoPagoController@mercadoPagoPay');
 Route::get('desactivarModal','IndexController@desactivarModal');
+Route::get('getDataLibro/{id}','CatalogoController@getDataLibro');
+Route::get('getDataContra/{id}','CatalogoController@getDataContra');
 Route::get('boleto',function(){
     $pdf = PDF::loadView('emails.boleto_virutal');
     $pdf->download();

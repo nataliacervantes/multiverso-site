@@ -8,113 +8,127 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use MercadoPago\Payment;
 use MercadoPago\Payer;
+use MercadoPago\Item;
+use MercadoPago\Preference;
 use Illuminate\Http\Request;
 
 class MercadoPagoController extends Controller
 {
 
-    public function mercadoPagoPay(Request $request){
+    public function mercadoPagoPay(){
         // dd($request->all());
-        SDK::setAccessToken("APP_USR-7429297907881490-092316-83a76f1b7f28ebed00557daa74226f5d-649986936");
-            $payment = new Payment();
-            $payment->transaction_amount = (float)$request->transactionAmount;
-            $payment->token = $request->token;
-            $payment->description = $request->description;
-            $payment->installments = (int)$request->installments;
-            $payment->issuer_id = (int)$request->issuer;
-            $payment->payment_method_id = $request->paymentMethodId;
+        
+        $preference = new Preference();
 
-            $payer = new Payer();
-            $payer->email = $request->email;
-            $payment->payer = $payer;
-            $payment->save();
-            // dd($payment);
-            $response = array(
-                'status' => $payment->status,
-                'status_detail' => $payment->status_detail,
-                'id' => $payment->id
-            );
-            dd($response['status']);
+        // Crea un ítem en la preferencia
+        $item = new Item();
+        $item->title = 'Mi producto';
+        $item->quantity = 1;
+        $item->unit_price = 75.56;
+        $preference->items = array($item);
+        $preference->save();
 
-            if($response['status'] == "approved"){
-                // dd('alv');
-                $validator = Validator::make($request->all(),['idDomicilio' => 'required',
-                'idTipoPago' => 'required']);
-                // dd($validator);
-                if($validator->fails()){
-                    return Redirect::back()->with('status', 'Es necesario que ingreses un domicilio!');
-                }else{
-                        // return $request->idDomicilio;
-                    $cfdi = DatosFiscales::find($request->idFacturacion);
-                    $pedido = Pedidos::find($request->idPedido);
+        return $preference->id;
+        
+            // $payment = new Payment();
+            // $payment->transaction_amount = (float)$request->transactionAmount;
+            // $payment->token = $request->token;
+            // $payment->description = $request->description;
+            // $payment->installments = (int)$request->installments;
+            // $payment->issuer_id = (int)$request->issuer;
+            // $payment->payment_method_id = $request->paymentMethodId;
 
-                    if($request->facturacion == null){
-                        $usoCFDI = "P01";
-                    }elseif($request->facturacion == 'si'){
-                        $usoCFDI = $cfdi->CFDI;
-                    }
+            // $payer = new Payer();
+            // $payer->email = $request->email;
+            // $payment->payer = $payer;
+            // $payment->save();
+            // // dd($payment);
+            // $response = array(
+            //     'status' => $payment->status,
+            //     'status_detail' => $payment->status_detail,
+            //     'id' => $payment->id
+            // );
+            // dd($response['status']);
 
-                        $tipoPago = 7;
-                        $estatus = 2;
+            // if($response['status'] == "approved"){
+            //     // dd('alv');
+            //     $validator = Validator::make($request->all(),['idDomicilio' => 'required',
+            //     'idTipoPago' => 'required']);
+            //     // dd($validator);
+            //     if($validator->fails()){
+            //         return Redirect::back()->with('status', 'Es necesario que ingreses un domicilio!');
+            //     }else{
+            //             // return $request->idDomicilio;
+            //         $cfdi = DatosFiscales::find($request->idFacturacion);
+            //         $pedido = Pedidos::find($request->idPedido);
 
-                    $user = User::find(Auth::user()->id);
-                    $id = $user->idBonance;
+            //         if($request->facturacion == null){
+            //             $usoCFDI = "P01";
+            //         }elseif($request->facturacion == 'si'){
+            //             $usoCFDI = $cfdi->CFDI;
+            //         }
 
-                    $productos = Carrito::where('pedido_id',$request->idPedido)->get();
+            //             $tipoPago = 7;
+            //             $estatus = 2;
 
-                    // dd($productos);
-                    $data['form_params'] = [
-                        'idUsuario' => $id,
-                        'Folio' => $request->folio,
-                        'Fecha' => Carbon::now()->format('Y-m-d'),
-                        'TipoDePago' => $request->idTipoPago,
-                        'TipoDeCambio' => $request->tipoCambio,
-                        'CuentaDePago' => '',
-                        'idDomicilio' => $request->idDomicilio,
-                        'UsoCFDI' => $usoCFDI,
-                        'Estatus' => $estatus,
-                        'Partidas' => [],
-                    ];
+            //         $user = User::find(Auth::user()->id);
+            //         $id = $user->idBonance;
 
-                    foreach($productos as $product){
-                        // dd($product);
-                        $row=[];
-                        $row['idProducto'] = $product->Producto;
-                        $row['Cantidad'] = $product->Cantidad;
-                        $row['PrecioUnitario'] = $product->Precio;
-                        $row['CodigoCliente'] = $product->id_usuario;
-                        $data['form_params']['Partidas'][] = $row;
-                    }
-                        // dd($data);
-                    $client = new Client([
-                        'base_uri' => 'http://asserver.ddns.net/grupobonance/api/',
-                        'timeout' => 30.0,
-                    ]);
+            //         $productos = Carrito::where('pedido_id',$request->idPedido)->get();
 
-                    $response = $client->request('POST', 'pedido', $data);
+            //         // dd($productos);
+            //         $data['form_params'] = [
+            //             'idUsuario' => $id,
+            //             'Folio' => $request->folio,
+            //             'Fecha' => Carbon::now()->format('Y-m-d'),
+            //             'TipoDePago' => $request->idTipoPago,
+            //             'TipoDeCambio' => $request->tipoCambio,
+            //             'CuentaDePago' => '',
+            //             'idDomicilio' => $request->idDomicilio,
+            //             'UsoCFDI' => $usoCFDI,
+            //             'Estatus' => $estatus,
+            //             'Partidas' => [],
+            //         ];
 
-                    $respuesta  = json_decode($response->getBody());
+            //         foreach($productos as $product){
+            //             // dd($product);
+            //             $row=[];
+            //             $row['idProducto'] = $product->Producto;
+            //             $row['Cantidad'] = $product->Cantidad;
+            //             $row['PrecioUnitario'] = $product->Precio;
+            //             $row['CodigoCliente'] = $product->id_usuario;
+            //             $data['form_params']['Partidas'][] = $row;
+            //         }
+            //             // dd($data);
+            //         $client = new Client([
+            //             'base_uri' => 'http://asserver.ddns.net/grupobonance/api/',
+            //             'timeout' => 30.0,
+            //         ]);
 
-                    dd($request->all());
-                    // return response(json_encode($respuesta->status),200);
+            //         $response = $client->request('POST', 'pedido', $data);
 
-                    if($respuesta->status == 'ok'){
-                        // dd($respuesta->status);
-                        $pedido->id_pedidoBonance = $respuesta->id;
-                        $pedido->Total = $request->total;
-                        $pedido->save();
+            //         $respuesta  = json_decode($response->getBody());
 
-                        foreach($productos as $prod){
-                            $prod->delete();
-                        }
+            //         dd($request->all());
+            //         // return response(json_encode($respuesta->status),200);
 
-                        return view('flujo-compra.orderCompleta', compact('pedido'));
+            //         if($respuesta->status == 'ok'){
+            //             // dd($respuesta->status);
+            //             $pedido->id_pedidoBonance = $respuesta->id;
+            //             $pedido->Total = $request->total;
+            //             $pedido->save();
 
-                    }elseif($respuesta->status == 'error'){
-                        return view('pages.404');
-                    }
-                }
-            }
+            //             foreach($productos as $prod){
+            //                 $prod->delete();
+            //             }
+
+            //             return view('flujo-compra.orderCompleta', compact('pedido'));
+
+            //         }elseif($respuesta->status == 'error'){
+            //             return view('pages.404');
+            //         }
+            //     }
+            // }
     }
 
     public function metodosPago(){

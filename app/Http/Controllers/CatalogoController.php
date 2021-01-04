@@ -47,4 +47,15 @@ class CatalogoController extends Controller
 
         return view('libros.escritor',compact('escritor'));
     }
+
+    public function getDataLibro($id){
+        $libro = Libros::find($id);
+        
+        return $libro->Portada;
+    }
+    public function getDataContra($id){
+        $libro = Libros::find($id);
+        
+        return $libro->Contraportada;
+    }
 }

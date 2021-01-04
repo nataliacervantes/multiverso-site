@@ -18,7 +18,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.4",
         "laravelcollective/html": "^6.2",
-        "mercadopago/dx-php": "2.1.1",
+        "mercadopago/dx-php": "^2.2",
         "nesbot/carbon": "^2.41",
         "paypal/rest-api-sdk-php": "*",
         "simplesoftwareio/simple-qrcode": "^4.1"
@@ -34,8 +34,6 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
-        // "@bower": "@vendor/bower-asset",
-        // "@npm": "@vendor/npm-asset"
     },
     "extra": {
         "laravel": {

@@ -2,6 +2,29 @@
 
 @section('content')
 <!-- START SECTION SHOP -->
+@php
+    use MercadoPago\SDK;
+    use Carbon\Carbon;
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Redirect;
+    use MercadoPago\Payment;
+    use MercadoPago\Payer;
+    use MercadoPago\Item;
+    use MercadoPago\Preference;
+    use Illuminate\Http\Request;
+
+    SDK::setAccessToken("APP_USR-7429297907881490-092316-83a76f1b7f28ebed00557daa74226f5d-649986936");
+
+    $preference = new Preference();
+
+        // Crea un ítem en la preferencia
+        $item = new Item();
+        $item->title = 'Mi producto';
+        $item->quantity = 1;
+        $item->unit_price = 75.56;
+        $preference->items = array($item);
+        $preference->save();
+@endphp
 <div class="section">
 	<div class="container">
         {{-- REsumen de compra --}}
@@ -157,7 +180,13 @@
                         <button class="btn btn-fill-out flex-item" type="submit">PayPal</button>
                 {!! Form::close() !!}
                         <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
-                        <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modalMP" data-toggle="modal">Mercadopago</button>
+                        {{-- <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modalMP" data-toggle="modal">Mercadopago</button> --}}
+                        {!! Form::open(['url'=>'procesar-pago']) !!}
+                            <script
+                                src="https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js"
+                                data-preference-id="<?php echo $preference->id; ?>">
+                            </script>
+                        {!! Form::close() !!}
                     </div>
                     
                 </div>
@@ -217,94 +246,7 @@
                     {!! Form::close() !!}
                 </div>
             </div>
-        </div>
-        @php
-            use SimpleSoftwareIO\QrCode\Facades\QrCode;
-        @endphp
-        <div class="visible-print text-center">
-            {!! QrCode::size(100)->generate(Request::url()); !!}
-            <p>Scan me to return to the original page.</p>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="modalMP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Pagar con Tarjeta</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form action="mercado-pago-pagar" method="post" id="paymentForm">
-                        <div class="modal-body" style="margin: 20px">
-                            <div class="container_payment" id='container_payment'>
-                                <div class="form-payment">
-                                    <div class="payment-details">
-                                        @csrf
-                                        <div class="row">
-                                            <label for="email">E-Mail</label>
-                                            <input id="email" name="email" type="text" class="form-control">
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="form-group col-sm-8">
-                                                <label for="cardholderName">Nombre que aparece en la tarjeta</label>
-                                                <input id="cardholderName" data-checkout="cardholderName" type="text" class="form-control">
-                                            </div>
-                                            <div class="form-group col-sm-3" style="margin-left: 15px">
-                                                <label for="">Fecha de Expiración</label>
-                                                <div class="input-group expiration-date">
-                                                    <input type="text" class="form-control" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth"
-                                                        onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                                    <input type="text" class="form-control" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear"
-                                                        onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-sm-8">
-                                                <label for="cardNumber">Número de la tarjeta</label>
-                                                <input type="text" class="form-control input-background" id="cardNumber" data-checkout="cardNumber"
-                                                    onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                            </div>
-                                            <div class="form-group col-sm-3" style="margin-left: 15px">
-                                                <label for="securityCode">CVV</label>
-                                                <input id="securityCode" data-checkout="securityCode" type="text" class="form-control"
-                                                    onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
-                                            </div>
-                                            <div id="issuerInput" class="form-group col-sm-12 hidden">
-                                                <label for="issuer">Banco</label>
-                                                <select id="issuer" name="issuer" data-checkout="issuer" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label for="installments">Pagos</label>
-                                                <select type="text" id="installments" name="installments" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                {{-- <input type="hidden" name="idPedido" id="idPedido"  value="{{ $pedido->id}}">
-                                                <input type="hidden" name="idDomicilio" id="modalDomicilio" value="">
-                                                <input type="hidden"  name="idTipoPago" id="modalTipoPago" value="" >
-                                                <input type="hidden" name="folio" id="folio" value="{{ $pedido->Folio }}">
-                                                <input type="hidden" value="{{ $tc }}" id="tc" name="tipoCambio">
-                                                <input type="hidden" name="facturacion" id="facturacion" value="">
-                                                <input type="hidden" name="idFacturacion" id="idFacturacion" value="">
-                                                <input type="hidden" name="transactionAmount" id="amount" value="{{ $total }}" />
-                                                <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
-                                                <input type="hidden" name="description" id="description" value="TecnoAbastos"/> --}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary ">Pagar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </div>       
     </div>
 </div>
 <!-- END SECTION SHOP -->
@@ -444,29 +386,29 @@
                 // $("#headerNew").load(" #headerNew");
             });
         }
-        $('#MetodosPago').on('change',function(){
-            var val = $('#MetodosPago').val();
-            if(val == 'visa'|| val == 'master' || val == 'debvisa' || val == 'debmaster' || val == 'amex'){
-                $('#container_payment').show();
+        // $('#MetodosPago').on('change',function(){
+        //     var val = $('#MetodosPago').val();
+        //     if(val == 'visa'|| val == 'master' || val == 'debvisa' || val == 'debmaster' || val == 'amex'){
+        //         $('#container_payment').show();
 
-            }else if( val == 'bancomer' || val == 'oxxo' | val == 'serfin' | val == 'banamex'){
-                $('#container_payment').hide();
-            }
-        })
-        $('#modalMP').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var idDomicilio = $('#Dire').val();
-            var idTipoPago = $("input[name='payment_option']:checked").val();
+        //     }else if( val == 'bancomer' || val == 'oxxo' | val == 'serfin' | val == 'banamex'){
+        //         $('#container_payment').hide();
+        //     }
+        // })
+        // $('#modalMP').on('show.bs.modal', function (event) {
+        //     var button = $(event.relatedTarget);
+        //     var idDomicilio = $('#Dire').val();
+        //     var idTipoPago = $("input[name='payment_option']:checked").val();
 
-            $('#modalDomicilio').val(idDomicilio);
-            $('#modalTipoPago').val(idTipoPago);
-            // $.get('{{ url("metodosPago") }}',function(val){
-            //     for(var i=0; i<val.length; i++){
-            //         if(val[i].id != 'mercadopagocard' && val[i].id != 'clabe' )
-            //             $("#MetodosPago").append('<option value="'+val[i].id+'">'+val[i].name+'</option>');
-            //     }
-            // })
-        })
+        //     $('#modalDomicilio').val(idDomicilio);
+        //     $('#modalTipoPago').val(idTipoPago);
+        //     // $.get('{{ url("metodosPago") }}',function(val){
+        //     //     for(var i=0; i<val.length; i++){
+        //     //         if(val[i].id != 'mercadopagocard' && val[i].id != 'clabe' )
+        //     //             $("#MetodosPago").append('<option value="'+val[i].id+'">'+val[i].name+'</option>');
+        //     //     }
+        //     // })
+        // })
         $(document).ready(function(){
             $('#subtotal').val(parseInt($('#totalHeader').val()));
             $('#total').val(parseInt($('#totalHeader').val()));
@@ -604,5 +546,11 @@
             $('#Envio').val(envio);
             $('#AddressM').val(address);
         })
+        // function pagarMP(){
+        //     $.get('{{ url("mercadoPagoPay")}}', function(data){
+        //         alert(data)
+        
+            // })
+        }
     </script>
 @endsection
