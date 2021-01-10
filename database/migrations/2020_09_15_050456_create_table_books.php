@@ -20,7 +20,7 @@ class CreateTableBooks extends Migration
             $table->float('Precio');
             $table->text('Descripcion');
             $table->longText('Portada');
-            $table->longText('Contraportada');
+            $table->longText('Video');
             $table->integer('Stock');
             $table->timestamps();
         });

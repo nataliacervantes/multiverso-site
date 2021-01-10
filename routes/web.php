@@ -50,6 +50,7 @@ Route::any('mercadoPagoPay','MercadoPagoController@mercadoPagoPay');
 Route::get('desactivarModal','IndexController@desactivarModal');
 Route::get('getDataLibro/{id}','CatalogoController@getDataLibro');
 Route::get('getDataContra/{id}','CatalogoController@getDataContra');
+Route::get('iframe/{id}','CatalogoController@getIframe');
 Route::get('boleto',function(){
     $pdf = PDF::loadView('emails.boleto_virutal');
     $pdf->download();

@@ -26,13 +26,14 @@
 <script src="{{asset('assets/js/jquery.elevatezoom.js')}}"></script>
 <!-- scripts js -->
 <script src="{{asset('assets/js/scripts.js')}}"></script>
-<a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
+{{-- <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a> --}}
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script
+{{-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> --}}
+
+{{-- <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script> 
+  crossorigin="anonymous"></script>  --}}
 {{-- <script>
     $(document).ready(function() {
     $.ajaxSetup({ cache: true });

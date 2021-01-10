@@ -58,4 +58,9 @@ class CatalogoController extends Controller
         
         return $libro->Contraportada;
     }
+    public function getIframe($id){
+        $libros = Libros::find($id);
+
+        return $libros->Video;
+    }
 }

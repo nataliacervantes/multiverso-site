@@ -36,7 +36,7 @@
                                             <div class="product_action_box">
                                                 <ul class="list_none pr_action_btn">
                                                     <li class="add-to-cart"><a onclick="agregar({{$libro->id}});" id="productoId" value="{{$libro->id}}"><i class="icon-basket-loaded"></i> Agregar al carrito</a></li>
-                                                    <li><a onclick="averquepedo({{$libro->id}});" ><i class="icon-magnifier-add"></i></a></li>
+                                                    <li><a type="button" data-toggle="modal" data-target="#exampleModal" data-verga="{{$libro->id}}"><i class="icon-magnifier-add"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -76,22 +76,32 @@
                     </div>
                 </div>
             @endforeach
-            <div id="card"> 
-                <div> 
-                  Front content
-                </div> 
-                <div>
-                  Back content
-                </div> 
-              </div>
+            <div  class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="iframe" class="modal-body" style="position: relative;
+                        overflow: hidden;
+                        padding-top: 56.25%;">
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- END SECTION SHOP -->
 @endsection
 
 @section('scripts')
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script>
         function agregar(id){
             $.ajax({
@@ -121,35 +131,31 @@
                     })
                 }
             });
-        }
-        function averquepedo(id){
-            // alert(id)
-            // $("#img-"+id).flip();
-            $("#card").flip('toggle');
-            // $.get('{{url("getDataLibro")}}/'+id, function(returnData){
-            //     // alert(returnData)
+        };
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('verga') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            // var modal = $(this)
+            // $('#exampleModalLabel').text(recipient)
+            // modal.find('.modal-title').text(recipient)
+            // modal.find('.modal-body input').val(recipient)
 
-            //     var portada = returnData;
-            //     // alert(portada)
-            //     if (document.getElementById("img-"+id).src == "https://admin.multiversolibreria.com/img/Portadas/"+portada) {
-            //         $.get('{{url("getDataContra")}}/'+id, function(contra){
-            //             $('#img-'+id).prop('src','images/profile.png');
-            //             // $('#precio-'+id).val();
-            //         })
-            //     }
-            // });
-            // // 
-            // if (document.getElementById("img").src == "https://admin.multiversolibreria.com/img/Portadas/"+portada) 
-            // {
-            //     // 
-            //     
-            //     alert(portada)
-            //     // document.getElementById("img").src = "";
-            // }
-            // else 
-            // {
-            //     document.getElementById("img").src = "https://admin.multiversolibreria.com/img/Portadas/"+portada;
-            // }
-        }
+            $.get('{{ url("iframe")}}/'+recipient, function(data){
+                
+                document.getElementById('iframe').innerHTML = data;
+                // document.getElementById('iframe').style.position =  'absolute';
+                // document.getElementById('iframe').style.top = 0;
+                // document.getElementById('iframe').style.left = 0;
+                // document.getElementById('iframe').style.bottom = 0;
+                // document.getElementById('iframe').style.right = 0;
+                // document.getElementById('iframe').style.width = '100%';
+                // document.getElementById('iframe').style.height = '100%';
+                // document.getElementById('iframe').style.border = 'none';
+
+            })
+        })
+
     </script>
 @endsection
