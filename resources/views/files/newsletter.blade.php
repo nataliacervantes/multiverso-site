@@ -17,7 +17,7 @@
                         <input type="text" name="Estado" required="" class="form-control rounded-0" placeholder="Estado" style="border: 0px">
                         <input type="email" name="Email" required="" class="form-control rounded-0" placeholder="Ingresa tu correo electrónico" style="border: 0px">
                         </div>
-                        <button type="submit" class="btn btn-dark rounded-0" name="submit" value="Submit" style="flex: 1 1; margin: 5px;">Subscribe</button>
+                        <button type="submit" class="btn btn-dark rounded-0" name="submit" value="Submit" style="flex: 1 1; margin: 5px;">Suscríbete</button>
                         </div>
                     {!! Form::close() !!}
                 </div>

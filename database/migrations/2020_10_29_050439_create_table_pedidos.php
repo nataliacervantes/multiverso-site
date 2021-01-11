@@ -16,7 +16,7 @@ class CreateTablePedidos extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->text('session');
-            $table->integer('Folio')->default(000000);
+            $table->integer('Folio')->default(000001);
             $table->string('EstatusPago')->nullable();
             $table->string('EstatusEnvio')->nullable();
             $table->string('Guia')->nullable();

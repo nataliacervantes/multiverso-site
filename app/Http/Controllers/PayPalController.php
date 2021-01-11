@@ -17,6 +17,7 @@ use App\BookPedido;
 use App\EventPedido;
 use App\Mail\ConfirmacionDePago;
 use App\Mail\ConfirmacionDePedido;
+use App\Mail\EnviarBoleto;
 use PayPal\Api\Amount;
 use PayPal\Api\Transaction;
 use PayPal\Api\RedirectUrls;
@@ -29,7 +30,7 @@ class PayPalController extends Controller
         session_start();
         $pedido = new Pedidos();
         $pedidos = Pedidos::latest('Folio')->first();
-
+        // dd($request->all());
         if($pedidos != null){
             $pedido->Folio = $pedidos->Folio + 1;
         }else{
@@ -168,6 +169,7 @@ class PayPalController extends Controller
                     $pivot->pedidos_id = $pedido->id;
                     $pivot->Cantidad =$carrito->Cantidad;
                     $pivot->save();
+                    Mail::to($pedido->Email)->send(new ConfirmacionDePago($pedido));
                     $carrito->delete();
                 }elseif($carrito->eventos_id != null){
                     $pivot = new EventPedido();
@@ -175,11 +177,12 @@ class PayPalController extends Controller
                     $pivot->pedidos_id = $pedido->id;
                     $pivot->Cantidad =$carrito->Cantidad;
                     $pivot->save();
+                    Mail::to($pedido->Email)->send(new EnviarBoleto($pedido));
                     $carrito->delete();
                 }
             }
 
-            Mail::to($pedido->Email)->send(new ConfirmacionDePago($pedido));
+            
           
             session_destroy();
             return view('checkout.confirmacioPago');
@@ -201,7 +204,7 @@ class PayPalController extends Controller
             $pedido->Folio = 000000;
         }
 
-        if($request->addressM ==1){
+        if($request->addressM == 1){
             $validatedData = $request->validate([
                     'nombre' => 'required',
                     'apellido' => 'required',
@@ -212,9 +215,7 @@ class PayPalController extends Controller
                     'pais' => 'required',
                     'cp' => 'required',
                     'telefono' => 'required',
-                    'infoExtra' => 'required',
                     'total' => 'required',
-                    'metodo' => 'required',
                     'envio' => 'required',
                     'email' =>'required|email',
             ]);
@@ -268,7 +269,7 @@ class PayPalController extends Controller
         
         if($promociones != null){
             $promociones->Limite = $promociones->Limite - 1 ;
-           
+            $promociones->save();
         }
 
         $carritos = Carrito::where('session_estatus',session_id())->get();
@@ -305,6 +306,34 @@ class PayPalController extends Controller
     public function exitoPedido(){
         return view('checkout.confirmacionPedido');
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // public function mercadoPagoPay(Request $request){
     //         // dd($request->all());
     //     SDK::setAccessToken("TEST-3058401090775798-070215-8a6d29999039e59d425eade729b3d680-594533699");

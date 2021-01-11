@@ -32,16 +32,17 @@ class SuscripcionMultiverso extends Mailable
     public function build()
     {
         $cupones = Promociones::where('Correo',1)->where('Tipo',3)->first();
+        // dd($cupones);
         if($cupones){
-       
-        $fecha = Carbon::now();
-        $actual =$fecha->format('Y-m-d'); 
-        $fechaInicio = strtotime($cupones->FechaI);
-        $fechaFin = strtotime($cupones->FechaF);
-        $fechaActual = strtotime($actual);
+            // dd($cupones);
+            $fecha = Carbon::now();
+            $actual =$fecha->format('Y-m-d'); 
+            $fechaInicio = strtotime($cupones->FechaI);
+            $fechaFin = strtotime($cupones->FechaF);
+            $fechaActual = strtotime($actual);
 
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
-           
+                // dd($cupones);
                 $cupones->Limite = $cupones->Limite - 1;
                 $cupones->save();
                 return $this->view('emails.suscripcionBienvenida', compact('cupones'));

@@ -97,14 +97,20 @@ class CarritoController extends Controller
     public function checkout(){
         session_start();
         $carrito = Carrito::where('session_estatus',session_id())->get();
-
-        foreach($carrito as $cart){
-            if($cart->books_id != null){
-                $costoEnvio = 1;
+        $books = Carrito::where('session_estatus',session_id())
+                ->where('books_id','!=', null)->first();
+        // dd($books);
+        
+            if($books != null){
+                $direccionCompleta = 1;
+                
+            }else{
+                $direccionCompleta = 0;
             }
-        }
+        
+
         session_destroy();
-        return view('checkout.list', compact('carrito','costoEnvio'));
+        return view('checkout.list', compact('carrito','direccionCompleta'));
     }
 
     public function formEnvio(Request $request){

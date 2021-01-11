@@ -16,14 +16,12 @@ class CatalogoController extends Controller
            
         return view('libros.catalogo',compact('autores'));
     }
-
     public function getImage($id){
         $libro = Libros::find($id);
   
         $path = $libro->Imagenes->store('public/images');
         // Libros::create(['path'=>$path]);
     }
-
     public function detalle($id){
         $libro = Libros::find($id);
         $comentarios = Comentarios::where('books_id',$id)->get();
@@ -41,13 +39,11 @@ class CatalogoController extends Controller
         // dd($promedio);
         return view('libros.detalle')->with(['libro'=>$libro,'comentarios'=>$comentarios,'promedio'=>$promedio]);
     }
-
     public function escritor($nombre){
         $escritor = Escritores::where('Nombre',$nombre)->first();
 
         return view('libros.escritor',compact('escritor'));
     }
-
     public function getDataLibro($id){
         $libro = Libros::find($id);
         

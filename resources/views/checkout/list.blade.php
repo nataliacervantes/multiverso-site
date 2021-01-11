@@ -1,7 +1,4 @@
 @extends('files.template')
-
-@section('content')
-<!-- START SECTION SHOP -->
 @php
     use MercadoPago\SDK;
     use Carbon\Carbon;
@@ -25,6 +22,9 @@
         $preference->items = array($item);
         $preference->save();
 @endphp
+@section('content')
+<!-- START SECTION SHOP -->
+
 <div class="section">
 	<div class="container">
         {{-- REsumen de compra --}}
@@ -107,7 +107,9 @@
             		<h4>Datos de Envío</h4>
                 </div>
                 {!! Form::open(['url'=>'payWithPaypal']) !!}
-                    <input type="hidden" name="address" id="address" value="0">
+                    @if(isset($direccionCompleta))
+                        <input type="hidden" name="addressM" value="{{$direccionCompleta}}">
+                    @endif
                     <div class="form-group">
                         <input type="text" required class="form-control" name="Nombre" id="Nombre"  placeholder="Nombre *">
                     </div>
@@ -120,8 +122,8 @@
                     <div class="form-group">
                         <input class="form-control" required type="text" name="Email"  id="Email" placeholder="Email *">
                     </div>
-                    @if(isset($costoEnvio))
-                        <input type="hidden" name="address" id="address" value="1">
+                    @if(isset($direccionCompleta) && $direccionCompleta == 1)
+                        <input type="hidden" name="address" id="address" value="{{$direccionCompleta}}">
                         <div class="form-group">
                             <input type="text" class="form-control" id="Domicilio" name="Domicilio" required="" placeholder="Domicilio (Calle & Número) *">
                         </div>
@@ -163,8 +165,8 @@
                                     <td class="cart_total_amount"><input id="subtotal" type="text" readonly style="border: 0; font-weight: 600; text-align: center"></td>
                                 </tr>
                                 <tr>
-                                    @if(isset($costoEnvio))
-                                        <input type="hidden" name="address" id="address" value="1">
+                                    @if(isset($direccionCompleta) && $direccionCompleta == 1)
+                                        <input type="hidden" name="address" id="address" value="{{$direccionCompleta}}">
                                         <td class="cart_total_label">Costo de Envío</td>
                                         <td class="cart_total_amount"><input id="envio" name="Envio" type="text" style="border: 0; text-align: center; font-weight: 600" readonly></td>
                                     @endif
@@ -239,7 +241,11 @@
                         {!! Form::hidden('telefono', '', ['id'=>'telefono']) !!}
                         {!! Form::hidden('envio', '', ['id'=>'Envio']) !!}
                         {!! Form::hidden('cp', '', ['id'=>'cp']) !!}
-                        {!! Form::hidden('addressM','', ['id'=>'AddressM']) !!}
+                        {{-- {!! Form::hidden('addressM','{{$direccionCompleta}}', ['id'=>'AddressM']) !!}
+                         --}}
+                         @if (isset($direccionCompleta))
+                            <input type="hidden" name="addressM" value="{{$direccionCompleta}}">
+                         @endif
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
@@ -386,31 +392,9 @@
                 // $("#headerNew").load(" #headerNew");
             });
         }
-        // $('#MetodosPago').on('change',function(){
-        //     var val = $('#MetodosPago').val();
-        //     if(val == 'visa'|| val == 'master' || val == 'debvisa' || val == 'debmaster' || val == 'amex'){
-        //         $('#container_payment').show();
-
-        //     }else if( val == 'bancomer' || val == 'oxxo' | val == 'serfin' | val == 'banamex'){
-        //         $('#container_payment').hide();
-        //     }
-        // })
-        // $('#modalMP').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget);
-        //     var idDomicilio = $('#Dire').val();
-        //     var idTipoPago = $("input[name='payment_option']:checked").val();
-
-        //     $('#modalDomicilio').val(idDomicilio);
-        //     $('#modalTipoPago').val(idTipoPago);
-        //     // $.get('{{ url("metodosPago") }}',function(val){
-        //     //     for(var i=0; i<val.length; i++){
-        //     //         if(val[i].id != 'mercadopagocard' && val[i].id != 'clabe' )
-        //     //             $("#MetodosPago").append('<option value="'+val[i].id+'">'+val[i].name+'</option>');
-        //     //     }
-        //     // })
-        // })
         $(document).ready(function(){
-            $('#subtotal').val(parseInt($('#totalHeader').val()));
+           var sub = $('#subtotal').val(parseInt($('#totalHeader').val()));
+            // alert(sub)
             $('#total').val(parseInt($('#totalHeader').val()));
         })
         $('#pais').on('change',function(){
@@ -528,9 +512,9 @@
             var email = $('#Email').val();
             var infoExtra = $('#InfoExtra').val();
             var envio = $('#envio').val();
-            var address = $('#address').val();
+            // var address = $('#address').val();
             // var total = $('#Total').val();
-
+            // alert(address)
             $('#nombre').val(nombre);
             $('#apellido').val(apellido);
             $('#ciudad').val(ciudad);
@@ -544,13 +528,13 @@
             $('#infoextra').val(infoExtra);
             $('#Total').val(total);
             $('#Envio').val(envio);
-            $('#AddressM').val(address);
+            // $('#AddressM').val(address);
         })
         // function pagarMP(){
         //     $.get('{{ url("mercadoPagoPay")}}', function(data){
         //         alert(data)
         
             // })
-        }
+        
     </script>
 @endsection

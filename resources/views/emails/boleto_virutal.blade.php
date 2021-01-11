@@ -314,8 +314,7 @@ word-break: break-all;
 
 </style>
     <div class="visible-print text-center">
-        {!! QrCode::format('png')->size(300)->generate(Request::url()); !!}
-        <p>Scan me to return to the original page.</p>
+        <img src="data:image/png;base64, {{ base64_encode($message->embedData(QrCode::format('png')->generate($msg['Folio']), 'QrCode.png', 'images/png')) }} ">
     </div>
 </body>
 </html>

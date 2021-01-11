@@ -28,7 +28,7 @@ class PedidosController extends Controller
             }
             $pedido->save();
 
-            Mail::to('nataliaglezcervantes@gmail.com')->send(new NotificacionDePago($pedido));
+            Mail::to('delaserna@multiversolibreria.com')->send(new NotificacionDePago($pedido));
 
             if($pedido){
                 return Redirect::back()->with('status', 'La ficha de pago se subió con éxito!');

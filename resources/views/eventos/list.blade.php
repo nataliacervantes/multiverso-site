@@ -93,14 +93,16 @@ use Carbon\Carbon;
                        <!--Accordion wrapper-->
                         <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
                             @foreach ($eventos as $evento)
+                                {{$evento->Fecha}}
                                 @php
                                     $fecha = Carbon::parse($evento->fecha);
                                     // $mes = $fecha->locale();
                                     $mes = $fecha->getTranslatedMonthName('MMMM');
+                                    
                                 @endphp
+                                {{$fecha->format('l')}}
                                  <!-- Accordion card -->
                                 <div class="card">
-                        
                                     <!-- Card header -->
                                    <div class="card-header" role="tab" id="headingOne1">
                                        <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true"
@@ -125,7 +127,6 @@ use Carbon\Carbon;
                                 </div>
                                <!-- Accordion card -->
                             @endforeach
-                           
                         </div>
                     <!-- Accordion wrapper -->
                     </div>

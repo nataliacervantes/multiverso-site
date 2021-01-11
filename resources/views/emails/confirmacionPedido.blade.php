@@ -328,7 +328,7 @@ word-break: break-all;
                         Deposita el costo del libro(s). BBVA 4152 3133 8175 4725 
                         </p>
                         
-                        <p>Debes subir tu ficha de pago en el siguiente enlace: <a href="http://127.0.0.1:8000/subirFicha"> Subir Ficha</a>
+                        <p>Debes subir tu ficha de pago en el siguiente enlace: <a href="https://multiversolibreria.com/subirFicha"> Subir Ficha</a>
                             <br>Recibirás un comprobante de envío en tu correo en breve.</p><br>
                         <p>Gracias por alimentar a este hombre</p>
                     </td>

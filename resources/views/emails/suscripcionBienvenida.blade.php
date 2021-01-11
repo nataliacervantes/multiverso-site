@@ -315,7 +315,7 @@ word-break: break-all;
 </style>
 <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
     <header class="header">
-        <img src="{{ asset('images/multiversologo.jpg') }}" class="logo" alt="Multiverso">
+        {{-- <img src="{{ asset('images/multiversologo.jpg') }}" class="logo" alt="Multiverso"> --}}
     </header>
     <!-- Email Body -->
     <tr>
@@ -328,14 +328,13 @@ word-break: break-all;
                         </p>
                         {{-- <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->generate('Embed me into an e-mail!')) !!} "> --}}
                         <p>De ahora en adelante podremos estar más en contacto.
-                            <img src="data:image/png;base64, {{ base64_encode($message->embedData(QrCode::format('png')->generate('me lleva la verga'), 'QrCode.png', 'images/png')) }} ">
-                            <br>Te haré llegar promociones y notificaciones de mis próximas presentaciones</p>
+                        <br>Te haré llegar promociones y notificaciones de mis próximas presentaciones</p>
                             {{-- <img src="{!!$message->embedData(QrCode::format('png')->generate('me lleva la verga'), 'QrCode.png', 'images/png')!!}"> --}}
-                        {{-- @if($cupones != null)
+                        @if(isset($cupones) && $cupones != null)
                             <p>Te regalo el envio en tu próxima compra, solo ingresa el siguiente cupón 
                                 <br><h3 style="display: block; margin:auto;">{{$cupones->Cupon}}</h3>                            
                             </p>
-                        @endif --}}
+                        @endif
                     </td>
                 </tr>
             </table>
