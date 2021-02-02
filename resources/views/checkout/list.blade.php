@@ -8,19 +8,83 @@
     use MercadoPago\Payer;
     use MercadoPago\Item;
     use MercadoPago\Preference;
+    use App\Carrito;
+    use App\Libros;
+    use App\Eventos;
     use Illuminate\Http\Request;
 
-    SDK::setAccessToken("APP_USR-7429297907881490-092316-83a76f1b7f28ebed00557daa74226f5d-649986936");
+    // SDK::setAccessToken("APP_USR-991604415903884-103004-415ee28ce26d977237de7495940c923e-62670496");
 
-    $preference = new Preference();
+    // $preference = new Preference();
+    // session_start();
+    // $carrito = Carrito::where('session_estatus',session_id())->get();
+    // session_destroy();
+    // if($carrito->count() > 0){
 
-        // Crea un ítem en la preferencia
-        $item = new Item();
-        $item->title = 'Mi producto';
-        $item->quantity = 1;
-        $item->unit_price = 75.56;
-        $preference->items = array($item);
-        $preference->save();
+    //     $datos = array();
+    //     foreach ($carrito as $car) {
+    //         $item = new Item();
+
+    //         $book = Libros::find($car->books_id);
+    //         $event = Eventos::find($car->eventos_id);
+    //         // dd($event);
+    //         if($book){
+    //             $item->title = $book->Titulo;
+    //             $item->id = $book->id;
+    //             // $item->category_id = "Libro";
+    //             $item->description = $book->Descripcion;
+    //             // $item->currency_id = "MXN";
+    //             $item->quantity = $car->Cantidad;;
+    //             $item->unit_price = $book->Precio;  
+    //             $datos[] = $item;
+    //         }else if ($event){
+    //             $item->title = $event->Evento;
+    //             $item->id = $event->id;
+    //             // $item->category_id = "Evento";
+    //             $item->description = $event->Lugar;
+    //             // $item->currency_id = "MXN";
+    //             $item->quantity = $car->Cantidad;;
+    //             $item->unit_price = $event->Costo;  
+    //             $datos[] = $item;
+    //         }
+    //     }
+    //         // dd($datos);
+    //         $preference->items = $datos;
+
+    //         $preference->payment_methods = array(
+    //             "excluded_payment_methods" => array(
+    //                 array("id" => "nativa"),
+    //                 array("id" => "naranja"),
+    //                 array("id" => "diners"),
+    //                 array("id" => "shopping"),
+    //                 array("id" => "cencosud"),
+    //                 array("id" => "cmr_master"),
+    //                 array("id" => "cordial"),
+    //                 array("id" => "cordobesa"),
+    //                 array("id" => "cabal"),
+    //                 array("id" => "maestro"),
+    //                 array("id" => "debcabal"),
+    //             ),
+    //             "excluded_payment_types" => array(
+    //                 array("id" => "ticket"),
+    //                 array("id" => "atm")
+    //             ),
+    //             // "installments" => 12
+    //         );
+    //         $preference->back_urls = array(
+    //             "success" => "http://127.0.0.1:8000/mercadoPagoPay",
+    //             "failure" => "https:/multiversolibreria/fail",
+    //             "pending" => "https://multiversolibreria/fail"
+    //         );
+    //         // $preference->auto_return = "approved";
+
+    //         $preference->save();
+    //         // dd($preference->id);
+    // }
+    // curl -X POST -H "Content-Type: application/json" 'Authorization: APP_USR-991604415903884-103004-415ee28ce26d977237de7495940c923e-62670496' "https://api.mercadopago.com/users/test_user" -d '{"site_id":"MLM"}'
+    // curl -X POST -H "Content-Type: application/json"  'Authorization: Bearer TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496' "https://api.mercadopago.com/users/test_user" -d '{"site_id":"MLM"}'
+    // curl -X GET  'https://api.mercadopago.com/v1/payment_methods'  -H 'Authorization: Bearer TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496'
+    // curl -X POST -H "Content-Type: application/json" "https://api.mercadopago.com/users/test_user?acces_token=TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496" -d '{"site_id":"MLM"}'
 @endphp
 @section('content')
 <!-- START SECTION SHOP -->
@@ -90,6 +154,11 @@
             	<div class="medium_divider"></div>
             </div>
         </div>
+        @if(session('status'))
+            <div class="alert alert-success" id="msgAlert" style="width: 500px; margin-left: 350px" id="alert">
+                {{ session('status') }}
+            </div>
+        @endif
         {{-- Sección inferior (form y pago) --}}
         <div class="row">
             @if ($errors->any())
@@ -117,6 +186,7 @@
                         <input type="text" required class="form-control" name="Apellido" id="Apellido" placeholder="Apellido *">
                     </div>
                     <div class="form-group">
+                        <div class="alert-message" id="errorTel"></div>
                         <input class="form-control" required type="text" name="Telefono" id="Telefono" placeholder="Teléfono/Celular *">
                     </div>
                     <div class="form-group">
@@ -151,7 +221,7 @@
                     @endif
             </div>
             {{-- Cálculo de total --}}
-            <div class="col-md-6">
+            <div class="col-md-6" >
                 <br><br>
             	<div class="border p-3 p-md-4">
                     <div class="heading_s1 mb-3">
@@ -182,15 +252,8 @@
                         <button class="btn btn-fill-out flex-item" type="submit">PayPal</button>
                 {!! Form::close() !!}
                         <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
-                        {{-- <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modalMP" data-toggle="modal">Mercadopago</button> --}}
-                        {!! Form::open(['url'=>'procesar-pago']) !!}
-                            <script
-                                src="https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js"
-                                data-preference-id="<?php echo $preference->id; ?>">
-                            </script>
-                        {!! Form::close() !!}
+                        <button class="btn btn-fill-out flex-item" src="" id="button-checkout" onclick="pagarMP()">MercadoPago</button>
                     </div>
-                    
                 </div>
                 <div class="toggle_info">
                     <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
@@ -255,12 +318,22 @@
         </div>       
     </div>
 </div>
+{{-- <style>
+    .mercadopago-button{
+        background: #423e3f;
+        margin-top: 10px;
+        font-family: "Inconsolata";
+        font-weight: 400;
+        /* border-width: 1px; */
+        /* padding: 12px; */
+    }
+</style> --}}
 <!-- END SECTION SHOP -->
 
 @endsection
 
 @section('scripts')
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
      {{-- Scripts para Paypal --}}
      <script src="https://www.paypalobjects.com/api/checkout.js"></script>
      <script>
@@ -396,6 +469,10 @@
            var sub = $('#subtotal').val(parseInt($('#totalHeader').val()));
             // alert(sub)
             $('#total').val(parseInt($('#totalHeader').val()));
+
+            setTimeout(function() {
+                $("#msgAlert").fadeOut();
+            },3500);
         })
         $('#pais').on('change',function(){
             var pais = $('#pais').val();
@@ -431,75 +508,10 @@
             var email = $('#Email').val();
             var infoExtra = $('#infoExtra').val();
             var envio = $('#envio').val();
-        
-                // paypal.Button.render({
-                //     env: 'sandbox',
-                //     client: {
-                //         sandbox: 'AZqhIzlG5wszF6K-p7mpPKHi_TNsKD27ALvL-KXowrGCafQ6Pcorec0XBxN1oQ6Uy7YQXzjLoYcHW83I',
-                //         production: 'AbBav_7FEP9RIE_aTYraX-McSAtmQOZUK-QRfNCO7BuxOm6zkaIEaR-nO_NFYnhQLEI4IJTvukChkZfV'
-                //     },
-                //     // Customize button (optional)
-                //     // TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496
-                //     // TEST-477887df-5218-4745-97bc-ba9c55a2c73d Public key
-                //         locale: 'en_MX',
-                //         style: {
-                //             size: 'small',
-                //             color: 'black',
-                //             shape: 'pill',
-                //             label: 'paypal'
-                //         },
-                //     commit: true,
-                //     payment: function(data, actions) {
-                //     return actions.payment.create({
-                //         transactions: [{
-                //             amount: {
-                //                 total: total,
-                //                 currency: 'MXN'
-                //             }
-                //         }]
-                //     });
-                //     },
-                //     // Execute the payment
-                //     onAuthorize: function(data, actions) {
-                //         return actions.payment.execute().then(function() {
-
-                //             window.alert('Gracias por tu compra!');
-
-                //             $.ajax({
-                //                 url: 'realizarPedido',
-                //                 method: 'POST',
-                //                 data: {
-                //                     '_token':'{{ csrf_token() }}',
-                //                     total:total,
-                //                     nombre:nombre,
-                //                     domicilio:domicilio,
-                //                     apellido:apellido,
-                //                     colonia:colonia,
-                //                     ciudad:ciudad,
-                //                     estado:Estado,
-                //                     pais:pais,
-                //                     cp:cp,
-                //                     telefono:telefono,
-                //                     email:email,
-                //                     infoExtra:infoExtra,
-                //                     envio:envio,
-                //                 }
-                //             }).done(function(result){
-                //                     // alert(result)
-                //                 if(result == 'ok'){
-                //                     window.location.href = 'orden-completa';
-                //                 }else if(result == 'error'){
-                //                     alert('Ingresa un domicilio')
-                //                 }
-                //             });
-                //         });
-                //     }
-                // }, '#paypal-button');
         })
         $('#modal').on('click',function(){
             // e.preventDefault();
             var total = $('#total').val();
-            // alert(total)
             var nombre = $('#Nombre').val();
             var domicilio = $('#Domicilio').val();
             var apellido = $('#Apellido').val();
@@ -530,11 +542,84 @@
             $('#Envio').val(envio);
             // $('#AddressM').val(address);
         })
-        // function pagarMP(){
-        //     $.get('{{ url("mercadoPagoPay")}}', function(data){
-        //         alert(data)
-        
+        function pagarMP(){
+            var total = $('#total').val();
+            var token = $('#token').val();
+            var nombre = $('#Nombre').val();
+            var domicilio = $('#Domicilio').val();
+            var apellido = $('#Apellido').val();
+            var colonia = $('#Colonia').val();
+            var ciudad = $('#Ciudad').val();
+            var estado = $('#Estado').val();
+            var pais = $('#pais').val();
+            var cp = $('#CP').val();
+            var telefono = $('#Telefono').val();
+            var email = $('#Email').val();
+            var infoExtra = $('#InfoExtra').val();
+            var envio = $('#envio').val();
+            var address = $('#address').val();
+            // alert(address);
+       
+            $.ajax({
+                    url: "{{url('mercadoPagoPay') }}",
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    data:{
+                        total: total,
+                        nombre : nombre,
+                        domicilio : domicilio,
+                        apellido : apellido,
+                        colonia : colonia,
+                        ciudad : ciudad,
+                        estado : estado,
+                        pais : pais,
+                        cp : cp,
+                        telefono : telefono,
+                        email : email,
+                        infoExtra : infoExtra,
+                        envio : envio,
+                        address: address,
+                    },
+                    success:function(preference){
+                        if(preference.id == 1){
+                            // alert(preference)
+                            $.each(preference.errors, function(key,value) {
+                                alert(value);
+                                    // $('#validation-errors').append('<div class="alert alert-danger">'+value+'</div');
+                            }); 
+                        }else{
+                            var script = document.createElement("script");
+                            script.src = "https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js";
+                            script.type = "text/javascript";
+                            script.dataset.preferenceId = preference;
+                            document.querySelector("#button-checkout").appendChild(script);
+                        }
+                    },
+                    error: function(xhr) {
+                        if(xhr.status == 422) {
+                            $.each(xhr.responseJSON.errors, function(key,value) {
+                                alert(value);
+                                // $('#validation-errors').append('<div class="alert alert-danger">'+value+'</div');
+                            }); 
+                        }
+                        
+                    }
+                            
+                    
+            })
+            // .done(function(preference) {
+            //     var script = document.createElement("script");
+            //     script.src = "https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js";
+            //     script.type = "text/javascript";
+            //     script.dataset.preferenceId = preference;
+            //     document.querySelector("#button-checkout").appendChild(script);
+                // document.querySelector("#button-checkout").setAttribute('src',script);
+                // document.querySelector('#button-checkout').click();
             // })
-        
+           
+        }
+    
     </script>
 @endsection

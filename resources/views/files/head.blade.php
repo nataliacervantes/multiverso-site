@@ -3,6 +3,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="Anil z" name="author">
+    {{-- <meta http-equiv="Content-Security-Policy" content="script-src self https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js"> --}}
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Editorial 100% mexicana creada por José de la Serna.">
     <meta name="keywords" content="libros, libros, José de la Serna, José, Serna, Jose de la Serna, editorial">

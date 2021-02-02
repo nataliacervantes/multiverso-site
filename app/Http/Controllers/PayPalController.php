@@ -50,6 +50,7 @@ class PayPalController extends Controller
             $pedido->Pais = $request->Pais;
             $pedido->CP = $request->CP;
             $pedido->Email = $request->Email;
+            $pedido->Metodo ='PayPal';
             $pedido->Telefono = $request->Telefono;
             $pedido->InfoExtra = $request->InfoExtra;
             $pedido->Total = $request->Total;
@@ -66,6 +67,7 @@ class PayPalController extends Controller
             $pedido->Estado = "NA";
             $pedido->Pais = "NA";
             $pedido->CP = 00000;
+            $pedido->Metodo ='PayPal';
             $pedido->Email = $request->Email;
             $pedido->Telefono = $request->Telefono;
             $pedido->InfoExtra = "NA";
@@ -120,7 +122,6 @@ class PayPalController extends Controller
             echo $status;
         }
     }
-
     public function paypalStatus(Request $request){
         session_start();
         $apiContext = new \PayPal\Rest\ApiContext(
@@ -150,7 +151,7 @@ class PayPalController extends Controller
         if($result->getState() === 'approved'){
             $pedido = Pedidos::where('session',session_id())->where('EstatusPago','Pendiente')->first();
             $pedido->EstatusPago = 'Pagado';
-            $pedido->Metodo ='PayPal';
+            // $pedido->Metodo ='PayPal';
             $pedido->save();
             $promociones = Promociones::where('Cupon',$request->cupon)->first();
             if($promociones != null){
@@ -159,7 +160,6 @@ class PayPalController extends Controller
             
             $carritos = Carrito::where('session_estatus',session_id())->get();
             
-
             foreach($carritos as $carrito){
                 
                 if($carrito->books_id != null){
@@ -192,7 +192,6 @@ class PayPalController extends Controller
             return redirect('error_page')->with(['status'=>$status]);
         }
     }
-
     public function deposito(Request $request){
         session_start();
         // dd($request->all());
@@ -298,11 +297,12 @@ class PayPalController extends Controller
         session_destroy();
         return view('checkout.confirmacionPedido');
     }
-
     public function exito(){
         return view('checkout.confirmacioPago');
     }
-
+    public function fail(){
+        return view('checkout.fail');
+    }
     public function exitoPedido(){
         return view('checkout.confirmacionPedido');
     }

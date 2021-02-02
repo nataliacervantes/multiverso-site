@@ -9,133 +9,261 @@ use Illuminate\Support\Facades\Redirect;
 use MercadoPago\Payment;
 use MercadoPago\Payer;
 use MercadoPago\Item;
+use MercadoPago\MerchantOrder;
+use MercadoPago\Shipments;
 use MercadoPago\Preference;
+use App\Carrito;
+use App\Libros;
+use App\Eventos;
+use App\Pedidos;
+use App\BookPedido;
+use App\Promociones;
+use App\EventPedido;
+use App\Mail\ConfirmacionDePago;
+use App\Mail\ConfirmacionDePedido;
+use Response;
 use Illuminate\Http\Request;
 
 class MercadoPagoController extends Controller
 {
 
-    public function mercadoPagoPay(){
-        // dd($request->all());
+    public function mercadoPagoPay(Request $request){
+
+        // $validator = Validator::make($request->all(),[
+        //     'nombre' => 'required',
+        //     'apellido' => 'required',
+        //     'domicilio' => 'required',
+        //     'colonia' => 'required',
+        //     'ciudad' => 'required',
+        //     'estado' => 'required',
+        //     'pais' => 'required',
+        //     'cp' => 'required',
+        //     'telefono' => 'required',
+        //     'total' => 'required',
+        //     'envio' => 'required',
+        //     'email' =>'required|email',
+        //     'address' => 'required',
+        // ]);
+       
+        // if($validator->fails()){
+        //     $preference = array('errors'=> $validator->getMessageBag()->toarray(),'id'=>1);
+        //     return $preference;
+        // }
+        // else{
+
+            SDK::setAccessToken("TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496");
+
+            $preference = new Preference();
+            session_start();
+            $carrito = Carrito::where('session_estatus',session_id())->get();
+            $pedido = new Pedidos();
+            $pedidos = Pedidos::latest('Folio')->first();
+            
+            if($pedidos != null){
+                $pedido->Folio = $pedidos->Folio + 1;
+            }else{
+                $pedido->Folio = 000000;
+            }
+
+            if($request->address ==1){
+                $validator = Validator::make($request->all(),[
+                    'nombre' => 'required',
+                    'apellido' => 'required',
+                    'domicilio' => 'required',
+                    'colonia' => 'required',
+                    'ciudad' => 'required',
+                    'estado' => 'required',
+                    'pais' => 'required',
+                    'cp' => 'required',
+                    'telefono' => 'required',
+                    'total' => 'required',
+                    'envio' => 'required',
+                    'email' =>'required|email',
+                    'address' => 'required',
+                ]);
+               
+                if($validator->fails()){
+                    $preference = array('errors'=> $validator->getMessageBag()->toarray(),'id'=>1);
+                    return $preference;
+                }else{
+                    $pedido->session = session_id();
+                    $pedido->EstatusPago = 'Pendiente';
+                    $pedido->EstatusEnvio = 'Pendiente';
+                    $pedido->Nombre = $request->nombre;
+                    $pedido->Apellido = $request->apellido;
+                    $pedido->Domicilio = $request->domicilio;
+                    $pedido->Colonia = $request->colonia;
+                    $pedido->Ciudad = $request->ciudad;
+                    $pedido->Estado = $request->estado;
+                    $pedido->Pais = $request->pais;
+                    $pedido->CP = $request->cp;
+                    $pedido->Email = $request->email;
+                    $pedido->Telefono = $request->telefono;
+                    $pedido->InfoExtra = $request->infoExtra;
+                    $pedido->Total = $request->total;
+                    $pedido->Envio = $request->envio;
+                    $pedido->Metodo ='MercadoPago';
+                }
+
+            }else{
+
+                $validator = Validator::make($request->all(),[
+                    'nombre' => 'required',
+                    'apellido' => 'required',
+                    'telefono' => 'required',
+                    'total' => 'required',
+                    'email' =>'required|email',
+                ]);
+               
+                if($validator->fails()){
+                    $preference = array('errors'=> $validator->getMessageBag()->toarray(),'id'=>1);
+                    return $preference;
+                }else{
+                    $pedido->session = session_id();
+                    $pedido->EstatusPago = 'Pendiente';
+                    $pedido->EstatusEnvio = 'Pendiente';
+                    $pedido->Nombre = $request->nombre;
+                    $pedido->Apellido = $request->apellido;
+                    $pedido->Domicilio = "NA";
+                    $pedido->Colonia = "NA";
+                    $pedido->Ciudad = "NA";
+                    $pedido->Estado = "NA";
+                    $pedido->Pais = "NA";
+                    $pedido->CP = 00000;
+                    $pedido->Email = $request->email;
+                    $pedido->Telefono = $request->telefono;
+                    $pedido->InfoExtra = "NA";
+                    $pedido->Total = $request->total;
+                    $pedido->Envio = 0;
+                    $pedido->Metodo ='MercadoPago';
+                }
+            }
+
+            $pedido->save();
+           
+            if($carrito->count() > 0){
+                $datos = array();
+                foreach ($carrito as $car) {
+                    $item = new Item();
+                    $book = Libros::find($car->books_id);
+                    $event = Eventos::find($car->eventos_id);
+                    
+                    if($book){
+                        $item->title = $book->Titulo;
+                        $item->id = $book->id;
+                        // $item->category_id = "Libro";
+                        $item->description = $book->Descripcion;
+                        // $item->currency_id = "MXN";
+                        $item->quantity = $car->Cantidad;
+                        $item->unit_price = $book->Precio;  
+                        $datos[] = $item;
+                    }else if ($event){
+                        $item->title = $event->Evento;
+                        $item->id = $event->id;
+                        // $item->category_id = "Evento";
+                        $item->description = $event->Lugar;
+                        // $item->currency_id = "MXN";
+                        $item->quantity = $car->Cantidad;
+                        $item->unit_price = $event->Costo;  
+                        $datos[] = $item;
+                    }
+                }
+                    // dd($datos);
+                $preference->items = $datos;
+                
+                $preference->payment_methods = array(
+                    "excluded_payment_methods" => array(
+                        array("id" => "nativa"),
+                        array("id" => "naranja"),
+                        array("id" => "diners"),
+                        array("id" => "shopping"),
+                        array("id" => "cencosud"),
+                        array("id" => "cmr_master"),
+                        array("id" => "cordial"),
+                        array("id" => "cordobesa"),
+                        array("id" => "cabal"),
+                        array("id" => "maestro"),
+                        array("id" => "debcabal"),
+                    ),
+                    "excluded_payment_types" => array(
+                        array("id" => "ticket"),
+                        array("id" => "atm")
+                    ),
+                    // "installments" => 12
+                );
+                $preference->back_urls = array(
+                    "success" => "http://127.0.0.1:8000/confirmacionPagoMP",
+                    "failure" => "https:/multiversolibreria/fail",
+                    "pending" => "https://multiversolibreria/fail"
+                );
+                if($request->envio != null){
+                    $envio = new Shipments();
+                    $envio->cost = $request->envio;
+                    $envio->mode =  "not_specified";
+                    
+
+                    // $preference->shipments=  (object) array(
+                    //     "cost" => $request->envio,
+                    //     "mode" => "not_specified"
+                    //     // "pending" => "https://multiversolibreria/fail"
+                    // );
+                }
+               
+                $preference->auto_return = "approved";
+                $preference->external_reference = $pedido->id;
+                // dd($preference);
+                $preference->save();
+            }
+            return $preference->id;
+            session_destroy();
         
-        $preference = new Preference();
-
-        // Crea un ítem en la preferencia
-        $item = new Item();
-        $item->title = 'Mi producto';
-        $item->quantity = 1;
-        $item->unit_price = 75.56;
-        $preference->items = array($item);
-        $preference->save();
-
-        return $preference->id;
-        
-            // $payment = new Payment();
-            // $payment->transaction_amount = (float)$request->transactionAmount;
-            // $payment->token = $request->token;
-            // $payment->description = $request->description;
-            // $payment->installments = (int)$request->installments;
-            // $payment->issuer_id = (int)$request->issuer;
-            // $payment->payment_method_id = $request->paymentMethodId;
-
-            // $payer = new Payer();
-            // $payer->email = $request->email;
-            // $payment->payer = $payer;
-            // $payment->save();
-            // // dd($payment);
-            // $response = array(
-            //     'status' => $payment->status,
-            //     'status_detail' => $payment->status_detail,
-            //     'id' => $payment->id
-            // );
-            // dd($response['status']);
-
-            // if($response['status'] == "approved"){
-            //     // dd('alv');
-            //     $validator = Validator::make($request->all(),['idDomicilio' => 'required',
-            //     'idTipoPago' => 'required']);
-            //     // dd($validator);
-            //     if($validator->fails()){
-            //         return Redirect::back()->with('status', 'Es necesario que ingreses un domicilio!');
-            //     }else{
-            //             // return $request->idDomicilio;
-            //         $cfdi = DatosFiscales::find($request->idFacturacion);
-            //         $pedido = Pedidos::find($request->idPedido);
-
-            //         if($request->facturacion == null){
-            //             $usoCFDI = "P01";
-            //         }elseif($request->facturacion == 'si'){
-            //             $usoCFDI = $cfdi->CFDI;
-            //         }
-
-            //             $tipoPago = 7;
-            //             $estatus = 2;
-
-            //         $user = User::find(Auth::user()->id);
-            //         $id = $user->idBonance;
-
-            //         $productos = Carrito::where('pedido_id',$request->idPedido)->get();
-
-            //         // dd($productos);
-            //         $data['form_params'] = [
-            //             'idUsuario' => $id,
-            //             'Folio' => $request->folio,
-            //             'Fecha' => Carbon::now()->format('Y-m-d'),
-            //             'TipoDePago' => $request->idTipoPago,
-            //             'TipoDeCambio' => $request->tipoCambio,
-            //             'CuentaDePago' => '',
-            //             'idDomicilio' => $request->idDomicilio,
-            //             'UsoCFDI' => $usoCFDI,
-            //             'Estatus' => $estatus,
-            //             'Partidas' => [],
-            //         ];
-
-            //         foreach($productos as $product){
-            //             // dd($product);
-            //             $row=[];
-            //             $row['idProducto'] = $product->Producto;
-            //             $row['Cantidad'] = $product->Cantidad;
-            //             $row['PrecioUnitario'] = $product->Precio;
-            //             $row['CodigoCliente'] = $product->id_usuario;
-            //             $data['form_params']['Partidas'][] = $row;
-            //         }
-            //             // dd($data);
-            //         $client = new Client([
-            //             'base_uri' => 'http://asserver.ddns.net/grupobonance/api/',
-            //             'timeout' => 30.0,
-            //         ]);
-
-            //         $response = $client->request('POST', 'pedido', $data);
-
-            //         $respuesta  = json_decode($response->getBody());
-
-            //         dd($request->all());
-            //         // return response(json_encode($respuesta->status),200);
-
-            //         if($respuesta->status == 'ok'){
-            //             // dd($respuesta->status);
-            //             $pedido->id_pedidoBonance = $respuesta->id;
-            //             $pedido->Total = $request->total;
-            //             $pedido->save();
-
-            //             foreach($productos as $prod){
-            //                 $prod->delete();
-            //             }
-
-            //             return view('flujo-compra.orderCompleta', compact('pedido'));
-
-            //         }elseif($respuesta->status == 'error'){
-            //             return view('pages.404');
-            //         }
-            //     }
-            // }
+        //http://127.0.0.1:8000/mercadoPagoPay?
+        // collection_id=13204681793&
+        // collection_status=approved&
+        // payment_id=13204681793&
+        // status=approved&
+        // external_reference=null&
+        // payment_type=account_money&
+        // merchant_order_id=2253226117&
+        // preference_id=62670496-98b73cee-6621-46d5-9c7a-3a3362c0f819&
+        // site_id=MLM&
+        // processing_mode=aggregator&
+        // merchant_account_id=null        
     }
 
-    public function metodosPago(){
-        SDK::setAccessToken("APP_USR-7429297907881490-092316-83a76f1b7f28ebed00557daa74226f5d-649986936");
-        $payment_methods = SDK::get("/v1/payment_methods");
-        // dd($payment_methods);
-        return response($payment_methods['body']);
-    }
+    public function confirmacionPagoMP(){
+        if($_GET['status']== 'approved'){
+            $id = $_GET['external_reference'];
 
+            $pedido = Pedidos::find($id);
+            $pedido->EstatusPago = 'Pagado';
+            // $pedido->Metodo ='PayPal';
+            $pedido->save();
+         
+            $carritos = Carrito::where('session_estatus',session_id())->get();
+            
+            foreach($carritos as $carrito){
+                
+                if($carrito->books_id != null){
+                    
+                    $pivot = new BookPedido();
+                    $pivot->books_id = $carrito->books_id;
+                    $pivot->pedidos_id = $pedido->id;
+                    $pivot->Cantidad =$carrito->Cantidad;
+                    $pivot->save();
+                    // Mail::to($pedido->Email)->send(new ConfirmacionDePago($pedido));
+                    $carrito->delete();
+                }elseif($carrito->eventos_id != null){
+                    $pivot = new EventPedido();
+                    $pivot->events_id = $carrito->eventos_id;
+                    $pivot->pedidos_id = $pedido->id;
+                    $pivot->Cantidad =$carrito->Cantidad;
+                    $pivot->save();
+                    // Mail::to($pedido->Email)->send(new EnviarBoleto($pedido));
+                    $carrito->delete();
+                }
+            }
+
+        }
+    }
 }
