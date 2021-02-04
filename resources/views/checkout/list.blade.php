@@ -35,7 +35,7 @@
     //             $item->description = $book->Descripcion;
     //             // $item->currency_id = "MXN";
     //             $item->quantity = $car->Cantidad;;
-    //             $item->unit_price = $book->Precio;  
+    //             $item->unit_price = $book->Precio;
     //             $datos[] = $item;
     //         }else if ($event){
     //             $item->title = $event->Evento;
@@ -44,7 +44,7 @@
     //             $item->description = $event->Lugar;
     //             // $item->currency_id = "MXN";
     //             $item->quantity = $car->Cantidad;;
-    //             $item->unit_price = $event->Costo;  
+    //             $item->unit_price = $event->Costo;
     //             $datos[] = $item;
     //         }
     //     }
@@ -138,7 +138,7 @@
                                         <td class="product-price" data-title="Price"><input value="$ {{$cart->Subtotal}}" type="text" id="precioEvento-{{$cart->eventos->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
                                     @endif
                                 </div></td>
-                                    <td class="product-subtotal"  id="totalEvento" data-title="Total"></td> 
+                                    <td class="product-subtotal"  id="totalEvento" data-title="Total"></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -287,7 +287,7 @@
                         Tu libro llega entre uno y dos días hábiles.
                         <br>
                         Al continuar con este método de pago, se levantará un pedido y te enviaremos un correo electrónico con los datos necesarios
-                        para realizar tu pago con depósito bancario o desde un oxxo. 
+                        para realizar tu pago con depósito bancario o desde un oxxo.
                     </div>
                     {!! Form::open(['url'=>'depositoBancario']) !!}
                     <div class="modal-footer">
@@ -315,7 +315,7 @@
                     {!! Form::close() !!}
                 </div>
             </div>
-        </div>       
+        </div>
     </div>
 </div>
 {{-- <style>
@@ -343,9 +343,9 @@
             var sum = Number(cantidad) + 1;
             var price = $('#precio-'+id).val();
             var sub = sum * Number(price);
-          
+
             $('#precioLibro-'+id).val('$'+Number(sub));
-            
+
             var subtotal = $('#subtotal').val();
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
             // alert(sumarSubtotal)
@@ -369,7 +369,7 @@
         function restaLibro(id){
             var cantidad = $('#cantidadLibro-'+id).val();
             var resta = parseInt(cantidad) - 1;
-            
+
             if(cantidad == 0){
                 alert('simon')
                $.get('eliminarLibro', function(result){
@@ -418,9 +418,9 @@
                     });
                 }
                 var tipo = result.charAt(result.length - 1);
-                // alert(tipo)var 
+                // alert(tipo)var
                 var val = result.split('/');
-                
+
                 if(tipo == '3'){
                     $('#envio').val('0');
                     var subtotal = $('#subtotal').val();
@@ -494,7 +494,7 @@
                 // alert($('#total').val())
                 // $("#headerNew").load(" #headerNew");
             });
-       
+
             var total = $('#total').val();
             var nombre = $('#Nombre').val();
             var domicilio = $('#Domicilio').val();
@@ -559,7 +559,7 @@
             var envio = $('#envio').val();
             var address = $('#address').val();
             // alert(address);
-       
+
             $.ajax({
                     url: "{{url('mercadoPagoPay') }}",
                     method: "GET",
@@ -588,7 +588,7 @@
                             $.each(preference.errors, function(key,value) {
                                 alert(value);
                                     // $('#validation-errors').append('<div class="alert alert-danger">'+value+'</div');
-                            }); 
+                            });
                         }else{
                             var script = document.createElement("script");
                             script.src = "https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js";
@@ -602,12 +602,12 @@
                             $.each(xhr.responseJSON.errors, function(key,value) {
                                 alert(value);
                                 // $('#validation-errors').append('<div class="alert alert-danger">'+value+'</div');
-                            }); 
+                            });
                         }
-                        
+
                     }
-                            
-                    
+
+
             })
             // .done(function(preference) {
             //     var script = document.createElement("script");
@@ -618,8 +618,14 @@
                 // document.querySelector("#button-checkout").setAttribute('src',script);
                 // document.querySelector('#button-checkout').click();
             // })
-           
+
         }
-    
+
+        // # Checkout Mercado Pago por xhr
+        const checkout = document.getElementById('button-checkout');
+        function processPayment() {
+
+        }
+
     </script>
 @endsection
