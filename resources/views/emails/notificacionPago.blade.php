@@ -316,7 +316,7 @@ word-break: break-all;
 
 <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
     <header class="header">
-        <img src="{{ asset('images/multiversologo.jpg') }}" class="logo" alt="Multiverso">
+        {{-- <img src="{{ asset('images/multiversologo.jpg') }}" class="logo" alt="Multiverso"> --}}
     </header>
 <!-- Email Body -->
     <tr>

@@ -37,6 +37,56 @@ Version      : 1.0
 /*===================================*
   01.GENERAL STYLE
 *===================================*/
+/* @font-face{
+	font-family: 'Serna';
+	src: url('../fonts/1942.eot') format(“embedded-opentype”),
+	url('../fonts/1942.woff') format(“woff”),
+	url('../fonts/1942.ttf') format(“truetype”),
+	url('../fonts/1942.svg') format(“svg”);
+} */
+#app-whatsapp{
+	position: fixed;
+	right: 24px;
+	bottom: 25px;
+	width: 60px;
+	z-index: 1000;
+	display: none;
+	bottom: 95px;
+	display: block;
+	font-size: 63px;
+	color: #1ebea5;
+}
+.flex-container {
+	/* We first create a flex layout context */
+	display: flex;
+	
+	/* Then we define the flow direction 
+	   and if we allow the items to wrap 
+	 * Remember this is the same as:
+	 * flex-direction: row;
+	 * flex-wrap: wrap;
+	 */
+	flex-flow: row wrap;
+	
+	/* Then we define how is distributed the remaining space */
+	justify-content: space-around;
+	
+	padding: 0;
+	margin: 0;
+	list-style: none;
+  }
+  .flex-item {
+	/* background: tomato; */
+	padding: 5px;
+	/* width: 200px;
+	height: 150px; */
+	margin-top: 10px;
+	/* line-height: 150px; */
+	/* color: white; */
+	/* font-weight: bold;
+	font-size: 3em; */
+	text-align: center;
+  }
 .embed-container {
     position: relative;
     padding-bottom: 56.25%;
@@ -71,12 +121,13 @@ html, body {
 body {
 	background: #ffffff none repeat scroll 0 0;
     color: #687188;
-    font-family: 'Poppins', sans-serif;
+	/* font-family: 'Poppins', sans-serif; */
+	font-family: 'Inconsolata', monospace;
     font-size: 16px;
 }
 h1,h2,h3,h4,h5,h6 {
 	color: #292b2c;
-	font-family: 'Roboto';
+	font-family: 'Inconsolata', monospace;
 }
 p {
 	color:#687188;
@@ -509,7 +560,7 @@ button:focus {
 	right: 0;
 	bottom: 0px;
 	height: 1px;
-	background-color: #FF324D;
+	/* background-color: #FF324D; */
 	z-index: -1;
 }
 .text_white * {
@@ -5052,7 +5103,7 @@ footer .widget_title {
 	padding: 15px;
 }
 .price {
-	color: #FF324D;
+	color: #000000;
 	font-weight: 600;
 }
 .product_price del {

@@ -28,7 +28,7 @@ class ConfirmacionDePago extends Mailable
      */
     public function build()
     {
-        return $this->from('nataliaglezcervantes@gmail.com')
+        return $this->from('contacto@multiversolibreria.com')
                 ->view('emails.confirmacionPago');
     }
 }

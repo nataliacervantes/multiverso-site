@@ -1,7 +1,94 @@
 @extends('files.template')
+@php
+    use MercadoPago\SDK;
+    use Carbon\Carbon;
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Redirect;
+    use MercadoPago\Payment;
+    use MercadoPago\Payer;
+    use MercadoPago\Item;
+    use MercadoPago\Preference;
+    use App\Carrito;
+    use App\Libros;
+    use App\Eventos;
+    use Illuminate\Http\Request;
 
+    // SDK::setAccessToken("APP_USR-991604415903884-103004-415ee28ce26d977237de7495940c923e-62670496");
+
+    // $preference = new Preference();
+    // session_start();
+    // $carrito = Carrito::where('session_estatus',session_id())->get();
+    // session_destroy();
+    // if($carrito->count() > 0){
+
+    //     $datos = array();
+    //     foreach ($carrito as $car) {
+    //         $item = new Item();
+
+    //         $book = Libros::find($car->books_id);
+    //         $event = Eventos::find($car->eventos_id);
+    //         // dd($event);
+    //         if($book){
+    //             $item->title = $book->Titulo;
+    //             $item->id = $book->id;
+    //             // $item->category_id = "Libro";
+    //             $item->description = $book->Descripcion;
+    //             // $item->currency_id = "MXN";
+    //             $item->quantity = $car->Cantidad;;
+    //             $item->unit_price = $book->Precio;  
+    //             $datos[] = $item;
+    //         }else if ($event){
+    //             $item->title = $event->Evento;
+    //             $item->id = $event->id;
+    //             // $item->category_id = "Evento";
+    //             $item->description = $event->Lugar;
+    //             // $item->currency_id = "MXN";
+    //             $item->quantity = $car->Cantidad;;
+    //             $item->unit_price = $event->Costo;  
+    //             $datos[] = $item;
+    //         }
+    //     }
+    //         // dd($datos);
+    //         $preference->items = $datos;
+
+    //         $preference->payment_methods = array(
+    //             "excluded_payment_methods" => array(
+    //                 array("id" => "nativa"),
+    //                 array("id" => "naranja"),
+    //                 array("id" => "diners"),
+    //                 array("id" => "shopping"),
+    //                 array("id" => "cencosud"),
+    //                 array("id" => "cmr_master"),
+    //                 array("id" => "cordial"),
+    //                 array("id" => "cordobesa"),
+    //                 array("id" => "cabal"),
+    //                 array("id" => "maestro"),
+    //                 array("id" => "debcabal"),
+    //             ),
+    //             "excluded_payment_types" => array(
+    //                 array("id" => "ticket"),
+    //                 array("id" => "atm")
+    //             ),
+    //             // "installments" => 12
+    //         );
+    //         $preference->back_urls = array(
+    //             "success" => "http://127.0.0.1:8000/mercadoPagoPay",
+    //             "failure" => "https:/multiversolibreria/fail",
+    //             "pending" => "https://multiversolibreria/fail"
+    //         );
+    //         // $preference->auto_return = "approved";
+
+    //         $preference->save();
+    //         // dd($preference->id);
+    // }
+    // curl -X POST -H "Content-Type: application/json" 'Authorization: APP_USR-991604415903884-103004-415ee28ce26d977237de7495940c923e-62670496' "https://api.mercadopago.com/users/test_user" -d '{"site_id":"MLM"}'
+    // curl -X POST -H "Content-Type: application/json"  'Authorization: Bearer TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496' "https://api.mercadopago.com/users/test_user" -d '{"site_id":"MLM"}'
+    // curl -X GET  'https://api.mercadopago.com/v1/payment_methods'  -H 'Authorization: Bearer TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496'
+    // curl -X POST -H "Content-Type: application/json" "https://api.mercadopago.com/users/test_user?acces_token=TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496" -d '{"site_id":"MLM"}'
+@endphp
 @section('content')
 <!-- START SECTION SHOP -->
+
 <div class="section">
 	<div class="container">
         {{-- REsumen de compra --}}
@@ -23,9 +110,9 @@
                                 <tr>
                                     @if($cart->books_id != null )
                                     <input type="hidden" value="{{$cart->books_id}}" id="idLibro">
-                                        <td class="product-thumbnail"><a href="#"><img src="{!! url('http://127.0.0.1:8001/img/Portadas/'.$cart->books->Portada) !!}" ></a></td>
+                                        <td class="product-thumbnail"><a href="#"><img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$cart->books->Portada) !!}" ></a></td>
                                         <td class="product-name" data-title="Producto">{{$cart->books->Titulo}}</td>
-                                        <td class="product-price" data-title="Precio U.">$45.00</td>
+                                        <td class="product-price" data-title="Precio U.">$ {{$cart->books->Precio}}</td>
                                         <td class="product-quantity" data-title="Cantidad"><div class="quantity">
                                             <input type="button" value="-" class="minus" onclick="restaLibro({{$cart->books->id}})">
                                             <input type="text" id='cantidadLibro-{{$cart->books->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
@@ -38,15 +125,17 @@
                                         <td class="product-thumbnail">
                                             <a href="{!! url('detalle/'.$cart->eventos->id) !!}"><img src="{!! asset('assets/images/calendario.png') !!}" alt="cart_thumb1"></a>
                                         </td>
-                                        <td >{{$cart->eventos->Evento}}</td>
-                                        <td class="product-quantity" data-title="Quantity"><div class="quantity">
-                                            <input type="button" value="-" class="minus" onclick="restaEvento({{$cart->eventos->id}})">
-                                            <input type="text" id='cantidadEvento-{{$cart->eventos->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
-                                            <input type="button" value="+" class="plus" onclick="sumaEvento({{$cart->eventos->id}})">
-                                            </div></td>
+                                        <td class="product-name" data-title="Producto">{{$cart->eventos->Evento}}</td>
+                                        <td class="product-price" data-title="Precio U.">$ {{$cart->eventos->Costo}}</td>
+                                        <td class="product-quantity" data-title="Quantity">
+                                            <div class="quantity">
+                                                <input type="button" value="-" class="minus" onclick="restaEvento({{$cart->eventos->id}})">
+                                                <input type="text" id='cantidadEvento-{{$cart->eventos->id}}' name="quantity" value="{{$cart->Cantidad}}" readonly title="Qty" class="qty" size="4">
+                                                <input type="button" value="+" class="plus" onclick="sumaEvento({{$cart->eventos->id}})">
+                                            </div>
+                                        </td>
                                             <input type="hidden" id="costo-{{$cart->eventos->id}}" value="{{$cart->eventos->Costo}}">
                                         <td class="product-price" data-title="Price"><input value="$ {{$cart->Subtotal}}" type="text" id="precioEvento-{{$cart->eventos->id}}" readonly style="border: 0; text-align: center; font-weight: 600"></td>
-                                      
                                     @endif
                                 </div></td>
                                     <td class="product-subtotal"  id="totalEvento" data-title="Total"></td> 
@@ -65,14 +154,31 @@
             	<div class="medium_divider"></div>
             </div>
         </div>
+        @if(session('status'))
+            <div class="alert alert-success" id="msgAlert" style="width: 500px; margin-left: 350px" id="alert">
+                {{ session('status') }}
+            </div>
+        @endif
         {{-- Sección inferior (form y pago) --}}
         <div class="row">
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             {{-- formulario de envío --}}
         	<div class="col-md-6">
             	<div class="heading_s1">
             		<h4>Datos de Envío</h4>
                 </div>
                 {!! Form::open(['url'=>'payWithPaypal']) !!}
+                    @if(isset($direccionCompleta))
+                        <input type="hidden" name="addressM" value="{{$direccionCompleta}}">
+                    @endif
                     <div class="form-group">
                         <input type="text" required class="form-control" name="Nombre" id="Nombre"  placeholder="Nombre *">
                     </div>
@@ -80,54 +186,43 @@
                         <input type="text" required class="form-control" name="Apellido" id="Apellido" placeholder="Apellido *">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="Domicilio" name="Domicilio" required="" placeholder="Domicilio (Calle & Número) *">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" required class="form-control" name="Colonia" id="Colonia" placeholder="Colonia *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" id="Ciudad" name="Ciudad" placeholder="Ciudad *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" name="Estado" id="Estado" placeholder="Estado *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" name="Pais" id="pais" placeholder="País *">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" required type="text" name="CP" id="CP" placeholder="Código Postal *">
-                    </div>
-                    <div class="form-group">
+                        <div class="alert-message" id="errorTel"></div>
                         <input class="form-control" required type="text" name="Telefono" id="Telefono" placeholder="Teléfono/Celular *">
                     </div>
                     <div class="form-group">
                         <input class="form-control" required type="text" name="Email"  id="Email" placeholder="Email *">
                     </div>
-                    <div class="heading_s1">
-                        <h4>Información Adicional</h4>
-                    </div>
-                    <div class="form-group mb-0">
-                        <textarea rows="5" class="form-control" name="InfoExtra" id="InfoExtra" style="resize: none" placeholder="Dedica el libro!"></textarea>
-                    </div>
+                    @if(isset($direccionCompleta) && $direccionCompleta == 1)
+                        <input type="hidden" name="address" id="address" value="{{$direccionCompleta}}">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="Domicilio" name="Domicilio" required="" placeholder="Domicilio (Calle & Número) *">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" required class="form-control" name="Colonia" id="Colonia" placeholder="Colonia *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" id="Ciudad" name="Ciudad" placeholder="Ciudad *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" name="Estado" id="Estado" placeholder="Estado *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" name="Pais" id="pais" placeholder="País *">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" required type="text" name="CP" id="CP" placeholder="Código Postal *">
+                        </div>
+                        <div class="heading_s1">
+                            <h4>Información Adicional</h4>
+                        </div>
+                        <div class="form-group mb-0">
+                            <textarea rows="5" class="form-control" name="InfoExtra" id="InfoExtra" style="resize: none" placeholder="Dedica el libro!"></textarea>
+                        </div>
+                    @endif
             </div>
             {{-- Cálculo de total --}}
-            <div class="col-md-6">
+            <div class="col-md-6" >
                 <br><br>
-                    <div class="toggle_info">
-                        <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
-                    </div>
-                    <div class="panel-collapse collapse coupon_form" id="coupon">
-                        <div class="panel-body">
-                            {{-- {!! Form::open(['url'=>'aplicarCupon']) !!} --}}
-                            <div class="coupon field_form input-group">
-                                <input type="text" value="" id="cupon" name="cupon" class="form-control" placeholder="Ingresa tu código..">
-                                <div class="input-group-append">
-                                    <button onclick="aplicarCupon()" class="btn btn-fill-out btn-sm" type="button">Aplicar cupón</button>
-                                </div>
-                            </div>
-                            {{-- {!! Form::close() !!} --}}
-                        </div>
-                    </div>
             	<div class="border p-3 p-md-4">
                     <div class="heading_s1 mb-3">
                         <h6>Carrito</h6>
@@ -140,8 +235,11 @@
                                     <td class="cart_total_amount"><input id="subtotal" type="text" readonly style="border: 0; font-weight: 600; text-align: center"></td>
                                 </tr>
                                 <tr>
-                                    <td class="cart_total_label">Costo de Envío</td>
-                                    <td class="cart_total_amount"><input id="envio" name="Envio" type="text" style="border: 0; text-align: center; font-weight: 600" readonly></td>
+                                    @if(isset($direccionCompleta) && $direccionCompleta == 1)
+                                        <input type="hidden" name="address" id="address" value="{{$direccionCompleta}}">
+                                        <td class="cart_total_label">Costo de Envío</td>
+                                        <td class="cart_total_amount"><input id="envio" name="Envio" type="text" style="border: 0; text-align: center; font-weight: 600" readonly></td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="cart_total_label">Total</td>
@@ -150,32 +248,28 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="payment_method">
-                        <div class="heading_s1">
-                            <h4>Payment</h4>
-                        </div>
-                        <div class="payment_option">
-                            <div class="custome-radio">
-                                <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" value="option3" checked="">
-                                <label class="form-check-label" for="exampleRadios3">Direct Bank Transfer</label>
-                                <p data-method="option3" class="payment-text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration. </p>
-                            </div>
-                            <div class="custome-radio">
-                                <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios4" value="option4">
-                                <label class="form-check-label" for="exampleRadios4">Check Payment</label>
-                                <p data-method="option4" class="payment-text">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                            </div>
-                            <div class="custome-radio">
-                                <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios5" value="option5">
-                                <label class="form-check-label" for="exampleRadios5">Paypal</label>
-                                <p data-method="option5" class="payment-text">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
-                            </div>
-                        </div>
+                    <div class="flex-container">
+                        <button class="btn btn-fill-out flex-item" type="submit">PayPal</button>
+                {!! Form::close() !!}
+                        <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
+                        <button class="btn btn-fill-out flex-item" src="" id="button-checkout" onclick="pagarMP()">MercadoPago</button>
                     </div>
-                    <button class="btn btn-fill-out" type="submit">PayPal</button>
-                    {!! Form::close() !!}
-                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
-                    <button  class="btn btn-fill-out" type="button" id="modal" data-target="#modal-mercado" data-toggle="modal">Mercadopago</button>
+                </div>
+                <div class="toggle_info">
+                    <span><i class="fas fa-tag"></i>¿Tienes un cupón? <a href="#coupon" data-toggle="collapse" class="collapsed" aria-expanded="false">Haz click aquí para ingresarlo</a></span>
+                </div>
+                <div class="panel-collapse collapse coupon_form" id="coupon">
+                    <div class="panel-body">
+                        {{-- {!! Form::open(['url'=>'aplicarCupon','method'=>'GET']) !!} --}}
+                        <div class="coupon field_form input-group">
+                            <input type="text"  id="cupon" name="cupon" class="form-control" placeholder="Ingresa tu código..">
+                            <div class="input-group-append">
+                                <button onclick="aplicarCupon()" class="btn btn-fill-out btn-sm" type="submit">Aplicar cupón</button>
+                                {{--  --}}
+                            </div>
+                        </div>
+                        {{-- {!! Form::close() !!} --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -210,102 +304,36 @@
                         {!! Form::hidden('telefono', '', ['id'=>'telefono']) !!}
                         {!! Form::hidden('envio', '', ['id'=>'Envio']) !!}
                         {!! Form::hidden('cp', '', ['id'=>'cp']) !!}
+                        {{-- {!! Form::hidden('addressM','{{$direccionCompleta}}', ['id'=>'AddressM']) !!}
+                         --}}
+                         @if (isset($direccionCompleta))
+                            <input type="hidden" name="addressM" value="{{$direccionCompleta}}">
+                         @endif
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                     {!! Form::close() !!}
                 </div>
             </div>
-        </div>
+        </div>       
     </div>
 </div>
+{{-- <style>
+    .mercadopago-button{
+        background: #423e3f;
+        margin-top: 10px;
+        font-family: "Inconsolata";
+        font-weight: 400;
+        /* border-width: 1px; */
+        /* padding: 12px; */
+    }
+</style> --}}
 <!-- END SECTION SHOP -->
 
 @endsection
 
 @section('scripts')
-    <script>
-        // function sumaLibro(id){
-        //     var cantidad = $('#cantidadLibro-'+id).val();
-        //     // alert(cantidad)
-        //     var sum = Number(cantidad) + 1;
-        //     var price = $('#precio-'+id).val();
-        //     var sub = sum * Number(price);
-          
-        //     $('#precioLibro-'+id).val(Number(sub));
-            
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(price) + parseInt(subtotal);
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // function sumaEvento(id){
-        //     var cantidad = $('#cantidadEvento-'+id).val();
-        //     var sum = parseInt(cantidad) + 1;
-        //     var price = $('#costo-'+id).val();
-        //     var sub = sum * price;
-        //     // alert(sub)
-        //     $('#precioEvento-'+id).val(sub);
-
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(price) + parseInt(subtotal);
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // function restaLibro(id){
-        //     var cantidad = $('#cantidadLibro-'+id).val();
-        //     var resta = parseInt(cantidad) - 1;
-        //     var price = $('#precio-'+id).val();
-        //     var sub = resta * price;
-        //     // alert(sub)
-        //     $('#precioLibro-'+id).val(sub);
-
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(subtotal) - parseInt(price) ;
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // function restaEvento(id){
-        //     var cantidad = $('#cantidadEvento-'+id).val();
-        //     var resta = parseInt(cantidad) - 1;
-        //     var price = $('#costo-'+id).val();
-        //     var sub = resta * price;
-        //     // alert(sub)
-        //     $('#precioEvento-'+id).val(sub);
-        //     var subtotal = $('#subtotal').val();
-        //     var sumarSubtotal = parseInt(subtotal) - parseInt(price);
-        //     // alert(sumarSubtotal)
-        //     $('#subtotal').val(sumarSubtotal);
-        // }
-
-        // $(document).ready(function(){
-        //     $('#subtotal').val(parseInt($('#totalHeader').val()));
-        // })
-
-        // $('#pais').on('change',function(){
-        //     var pais = $('#pais').val();
-        //     // alert(pais)
-        //     $.ajax({
-        //         url: "{{url('calcularEnvio') }}",
-        //         method: 'GET',
-        //         data: {
-        //             pais: pais,
-        //         }
-        //     }).done(function(result){
-        //         // alert(result)
-        //         $('#envio').val(result);
-        //         var subtotal = $('#subtotal').val();
-        //         var envio = $('#envio').val();
-        //         var total = parseInt(subtotal) + parseInt(envio);
-        //         // alert(total)
-        //         $('#total').val(total);
-        //         // $("#headerNew").load(" #headerNew");
-        //     });
-        // })
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
      {{-- Scripts para Paypal --}}
      <script src="https://www.paypalobjects.com/api/checkout.js"></script>
      <script>
@@ -322,6 +350,7 @@
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function sumaEvento(id){
             var cantidad = $('#cantidadEvento-'+id).val();
@@ -335,10 +364,18 @@
             var sumarSubtotal = parseInt(price) + parseInt(subtotal);
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function restaLibro(id){
             var cantidad = $('#cantidadLibro-'+id).val();
             var resta = parseInt(cantidad) - 1;
+            
+            if(cantidad == 0){
+                alert('simon')
+               $.get('eliminarLibro', function(result){
+
+               })
+            }
             var price = $('#precio-'+id).val();
             var sub = resta * price;
             // alert(sub)
@@ -348,6 +385,7 @@
             var sumarSubtotal = parseInt(subtotal) - parseInt(price) ;
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function restaEvento(id){
             var cantidad = $('#cantidadEvento-'+id).val();
@@ -360,6 +398,7 @@
             var sumarSubtotal = parseInt(subtotal) - parseInt(price);
             // alert(sumarSubtotal)
             $('#subtotal').val(sumarSubtotal);
+            $('#total').val(sumarSubtotal);
         }
         function aplicarCupon(){
             var cupon = $('#cupon').val();
@@ -372,6 +411,12 @@
                 }
             }).done(function(result){
                 // alert(result)
+                if(result == 'nel'){
+                    swal("El cupón que ingresaste no es válido!", {
+                        buttons: false,
+                        timer: 2000,
+                    });
+                }
                 var tipo = result.charAt(result.length - 1);
                 // alert(tipo)var 
                 var val = result.split('/');
@@ -404,10 +449,10 @@
                     // alert(descuento)
 
                     $('#total').val(total-descuento);
-                    swal("Felcidades, se hizo el descuento del cupón ingresado!", {
-                        buttons: false,
-                        timer: 2000,
-                    });
+                        swal("Felcidades, se hizo el descuento del cupón ingresado!", {
+                            buttons: false,
+                            timer: 2000,
+                        });
                 }
 
                 // $('#envio').val(result);
@@ -421,7 +466,13 @@
             });
         }
         $(document).ready(function(){
-            $('#subtotal').val(parseInt($('#totalHeader').val()));
+           var sub = $('#subtotal').val(parseInt($('#totalHeader').val()));
+            // alert(sub)
+            $('#total').val(parseInt($('#totalHeader').val()));
+
+            setTimeout(function() {
+                $("#msgAlert").fadeOut();
+            },3500);
         })
         $('#pais').on('change',function(){
             var pais = $('#pais').val();
@@ -457,75 +508,10 @@
             var email = $('#Email').val();
             var infoExtra = $('#infoExtra').val();
             var envio = $('#envio').val();
-        
-                // paypal.Button.render({
-                //     env: 'sandbox',
-                //     client: {
-                //         sandbox: 'AZqhIzlG5wszF6K-p7mpPKHi_TNsKD27ALvL-KXowrGCafQ6Pcorec0XBxN1oQ6Uy7YQXzjLoYcHW83I',
-                //         production: 'AbBav_7FEP9RIE_aTYraX-McSAtmQOZUK-QRfNCO7BuxOm6zkaIEaR-nO_NFYnhQLEI4IJTvukChkZfV'
-                //     },
-                //     // Customize button (optional)
-                //     // TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496
-                //     // TEST-477887df-5218-4745-97bc-ba9c55a2c73d Public key
-                //         locale: 'en_MX',
-                //         style: {
-                //             size: 'small',
-                //             color: 'black',
-                //             shape: 'pill',
-                //             label: 'paypal'
-                //         },
-                //     commit: true,
-                //     payment: function(data, actions) {
-                //     return actions.payment.create({
-                //         transactions: [{
-                //             amount: {
-                //                 total: total,
-                //                 currency: 'MXN'
-                //             }
-                //         }]
-                //     });
-                //     },
-                //     // Execute the payment
-                //     onAuthorize: function(data, actions) {
-                //         return actions.payment.execute().then(function() {
-
-                //             window.alert('Gracias por tu compra!');
-
-                //             $.ajax({
-                //                 url: 'realizarPedido',
-                //                 method: 'POST',
-                //                 data: {
-                //                     '_token':'{{ csrf_token() }}',
-                //                     total:total,
-                //                     nombre:nombre,
-                //                     domicilio:domicilio,
-                //                     apellido:apellido,
-                //                     colonia:colonia,
-                //                     ciudad:ciudad,
-                //                     estado:Estado,
-                //                     pais:pais,
-                //                     cp:cp,
-                //                     telefono:telefono,
-                //                     email:email,
-                //                     infoExtra:infoExtra,
-                //                     envio:envio,
-                //                 }
-                //             }).done(function(result){
-                //                     // alert(result)
-                //                 if(result == 'ok'){
-                //                     window.location.href = 'orden-completa';
-                //                 }else if(result == 'error'){
-                //                     alert('Ingresa un domicilio')
-                //                 }
-                //             });
-                //         });
-                //     }
-                // }, '#paypal-button');
         })
         $('#modal').on('click',function(){
             // e.preventDefault();
             var total = $('#total').val();
-            // alert(total)
             var nombre = $('#Nombre').val();
             var domicilio = $('#Domicilio').val();
             var apellido = $('#Apellido').val();
@@ -538,8 +524,9 @@
             var email = $('#Email').val();
             var infoExtra = $('#InfoExtra').val();
             var envio = $('#envio').val();
+            // var address = $('#address').val();
             // var total = $('#Total').val();
-
+            // alert(address)
             $('#nombre').val(nombre);
             $('#apellido').val(apellido);
             $('#ciudad').val(ciudad);
@@ -553,6 +540,86 @@
             $('#infoextra').val(infoExtra);
             $('#Total').val(total);
             $('#Envio').val(envio);
+            // $('#AddressM').val(address);
         })
+        function pagarMP(){
+            var total = $('#total').val();
+            var token = $('#token').val();
+            var nombre = $('#Nombre').val();
+            var domicilio = $('#Domicilio').val();
+            var apellido = $('#Apellido').val();
+            var colonia = $('#Colonia').val();
+            var ciudad = $('#Ciudad').val();
+            var estado = $('#Estado').val();
+            var pais = $('#pais').val();
+            var cp = $('#CP').val();
+            var telefono = $('#Telefono').val();
+            var email = $('#Email').val();
+            var infoExtra = $('#InfoExtra').val();
+            var envio = $('#envio').val();
+            var address = $('#address').val();
+            // alert(address);
+       
+            $.ajax({
+                    url: "{{url('mercadoPagoPay') }}",
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    data:{
+                        total: total,
+                        nombre : nombre,
+                        domicilio : domicilio,
+                        apellido : apellido,
+                        colonia : colonia,
+                        ciudad : ciudad,
+                        estado : estado,
+                        pais : pais,
+                        cp : cp,
+                        telefono : telefono,
+                        email : email,
+                        infoExtra : infoExtra,
+                        envio : envio,
+                        address: address,
+                    },
+                    success:function(preference){
+                        if(preference.id == 1){
+                            // alert(preference)
+                            $.each(preference.errors, function(key,value) {
+                                alert(value);
+                                    // $('#validation-errors').append('<div class="alert alert-danger">'+value+'</div');
+                            }); 
+                        }else{
+                            var script = document.createElement("script");
+                            script.src = "https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js";
+                            script.type = "text/javascript";
+                            script.dataset.preferenceId = preference;
+                            document.querySelector("#button-checkout").appendChild(script);
+                        }
+                    },
+                    error: function(xhr) {
+                        if(xhr.status == 422) {
+                            $.each(xhr.responseJSON.errors, function(key,value) {
+                                alert(value);
+                                // $('#validation-errors').append('<div class="alert alert-danger">'+value+'</div');
+                            }); 
+                        }
+                        
+                    }
+                            
+                    
+            })
+            // .done(function(preference) {
+            //     var script = document.createElement("script");
+            //     script.src = "https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js";
+            //     script.type = "text/javascript";
+            //     script.dataset.preferenceId = preference;
+            //     document.querySelector("#button-checkout").appendChild(script);
+                // document.querySelector("#button-checkout").setAttribute('src',script);
+                // document.querySelector('#button-checkout').click();
+            // })
+           
+        }
+    
     </script>
 @endsection

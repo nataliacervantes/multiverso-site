@@ -12,11 +12,17 @@ class EventosController extends Controller
     }
 
     public function buscar(Request $request){
-        // dd($request->buscar);
-
+        
         $eventos = Eventos::where('Lugar','like',"%$request->buscar%")
                             ->orWhere('Evento','like',"%$request->buscar%")
                             ->orWhere('Estado','like',"%$request->buscar%")->get();
+        // dd($eventos);
+        return view('eventos.list', compact('eventos'));
+    }
+
+    public function buscarFecha(Request $request){
+        
+        $eventos = Eventos::where('Fecha','like',"%$request->buscar%")->get();
         // dd($eventos);
         return view('eventos.list', compact('eventos'));
     }

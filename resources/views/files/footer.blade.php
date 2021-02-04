@@ -1,13 +1,21 @@
 <!-- START FOOTER -->
 <footer class="footer_dark">
-	<div class="footer_top">
-        <div class="container">
-            <div class="row">
-                
+    <div class="footer_top">
+        <a  id="app-whatsapp" target="_blank" href="https://api.whatsapp.com/send?phone=+5214443083549&text=Hola!%20quiero%20%20alimentarte">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+    <div class="d-block d-sm-block d-md-none">
+        <div class="footer_top">
+            <div class="container">
+                <div class="row" style="margin-bottom: 50px">
+                    
+                </div>
             </div>
         </div>
     </div>
-    <div class="bottom_footer border-top-tran">
+    <!-- Your Chat Plugin code -->
+    {{-- <div class="bottom_footer border-top-tran">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -24,40 +32,32 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </footer>
 <!-- END FOOTER -->
-<!-- GetButton.io widget -->
-{{-- <script type="text/javascript">
-    (function () {
-        var options = {
-            facebook: "117041266106827", // Facebook page ID
-            whatsapp: "+1553331403112", // WhatsApp number
-            call_to_action: "Message us", // Call to action
-            button_color: "#666666", // Color of button
-            position: "right", // Position may be 'right' or 'left'
-            order: "facebook,whatsapp", // Order of buttons
-        };
-        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
-        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
-        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
-    })();
-</script> --}}
-<!-- /GetButton.io widget -->
-<!-- GetButton.io widget -->
-{{-- <script type="text/javascript">
-    (function () {
-        var options = {
-            facebook: "117041266106827",
-            call_to_action: "Message us", // Call to action
-            button_color: "#FF6550", // Color of button
-            position: "right", // Position may be 'right' or 'left'
-        };
-        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
-        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
-        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
-    })();
-</script> --}}
-<!-- /GetButton.io widget -->
+<!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v9.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/es_LA/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-customerchat"
+    attribution=setup_tool
+    page_id="447165475453303"
+    theme_color="#0A7CFF"
+    greeting_dialog_display="fade"
+    logged_in_greeting="Hola! ¿Cómo puedo ayudarte?"
+    logged_out_greeting="Hola! ¿Cómo puedo ayudarte?">
+</div>

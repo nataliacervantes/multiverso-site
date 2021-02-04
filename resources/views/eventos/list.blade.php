@@ -88,31 +88,47 @@ use Carbon\Carbon;
                                     </ul>
                                 </li>
                             </ul> --}}
-                            <div class="ui styled accordion">
-                                <div class="title">
-                                  <i class="dropdown icon"></i>
-                                  What is a dog?
-                                </div>
-                                <div class="content">
-                                  <p class="transition hidden">A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
-                                </div>
-                                <div class="title">
-                                  <i class="dropdown icon"></i>
-                                  What kinds of dogs are there?
-                                </div>
-                                <div class="content">
-                                  <p class="transition hidden">There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of dog that they find to be compatible with their own lifestyle and desires from a companion.</p>
-                                </div>
-                                <div class="title active">
-                                  <i class="dropdown icon"></i>
-                                  How do you acquire a dog?
-                                </div>
-                                <div class="content active">
-                                  <p class="transition visible">Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.</p>
-                                  <p class="transition visible">A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your dog from a shelter, helps give a good home to a dog who may not find one so readily.</p>
-                                </div>
-                              </div>
+                            
                         </div>
+                       <!--Accordion wrapper-->
+                        <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+                            @foreach ($eventos as $evento)
+                                {{$evento->Fecha}}
+                                @php
+                                    $fecha = Carbon::parse($evento->fecha);
+                                    // $mes = $fecha->locale();
+                                    $mes = $fecha->getTranslatedMonthName('MMMM');
+                                    
+                                @endphp
+                                {{$fecha->format('l')}}
+                                 <!-- Accordion card -->
+                                <div class="card">
+                                    <!-- Card header -->
+                                   <div class="card-header" role="tab" id="headingOne1">
+                                       <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true"
+                                       aria-controls="collapseOne1">
+                                       <h5 class="mb-0">
+                                          {{$mes}} <i class="fas fa-angle-down rotate-icon"></i>
+                                       </h5>     
+                                       </a>
+                                   </div>
+                               
+                                   <!-- Card body -->
+                                   <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1"
+                                       data-parent="#accordionEx">
+                                       <div class="card-body">
+                                            {!! Form::open(['url'=>'buscarFecha', 'method'=>'GET']) !!}
+                                                {!! Form::hidden('buscar', $evento->Fecha) !!}
+                                                <button class="btn btn-link" type="submit">{{ $evento->Fecha}}</button>
+                                            {!! Form::close() !!}
+                                       </div>
+                                   </div>
+       
+                                </div>
+                               <!-- Accordion card -->
+                            @endforeach
+                        </div>
+                    <!-- Accordion wrapper -->
                     </div>
                 </div>
             </div>
@@ -136,7 +152,11 @@ use Carbon\Carbon;
             }).done(function(result){
                 // alert(result)
                 $("#headerNew").load(" #headerNew");
+                swal("Evento agregado", {
+                    buttons: false,
+                    timer: 3000,
+                });
             });
-        }
+        }        
     </script>
 @endsection

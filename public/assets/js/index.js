@@ -1,10 +1,8 @@
-//REPLACE WITH YOUR PUBLIC KEY AVAILABLE IN: https://developers.mercadopago.com/panel/credentials
-// window.Mercadopago.setPublishableKey("TEST-82226301-45cd-465d-be3b-7c2200db8515");
-
+ //REPLACE WITH YOUR PUBLIC KEY AVAILABLE IN: https://developers.mercadopago.com/panel/credentials
 window.Mercadopago.setPublishableKey("APP_USR-10301397-1b1c-4fe7-9f96-65608dd9f734");
 
 window.Mercadopago.getIdentificationTypes();
-
+  
 document.getElementById('cardNumber').addEventListener('change', guessPaymentMethod);
 function guessPaymentMethod(event) {
     cleanCardInfo();
@@ -21,10 +19,10 @@ function guessPaymentMethod(event) {
 function setPaymentMethod(status, response) {
     if (status == 200) {
         let paymentMethod = response[0];
-
+        
         document.getElementById('paymentMethodId').value = paymentMethod.id;
-        // document.getElementById('cardNumber').style.backgroundImage = 'url(' + paymentMethod.thumbnail + ')';
-
+        document.getElementById('cardNumber').style.backgroundImage = 'url(' + paymentMethod.thumbnail + ')';
+        
         if(paymentMethod.additional_info_needed.includes("issuer_id")){
             getIssuers(paymentMethod.id);
 
@@ -44,7 +42,7 @@ function setPaymentMethod(status, response) {
 
 function getIssuers(paymentMethodId) {
     window.Mercadopago.getIssuers(
-        paymentMethodId,
+        paymentMethodId, 
         setIssuers
     );
 }
@@ -59,13 +57,13 @@ function setIssuers(status, response) {
             opt.value = issuer.id;
             issuerSelect.appendChild(opt);
         });
-
+        
         if(issuerSelect.options.length <= 1){
             document.getElementById('issuerInput').classList.add("hidden");
         } else {
             document.getElementById('issuerInput').classList.remove("hidden");
         }
-
+        
         getInstallments(
             document.getElementById('paymentMethodId').value,
             document.getElementById('amount').value,
@@ -97,7 +95,7 @@ function setInstallments(status, response){
     } else {
         alert(`installments method info error: ${response}`);
     }
-}
+}  
 
 //Update offered installments when issuer changes
 document.getElementById('issuer').addEventListener('change', updateInstallmentsForIssuer);
@@ -111,7 +109,6 @@ function updateInstallmentsForIssuer(event) {
 
 //Proceed with payment
 doSubmit = false;
-
 document.getElementById('paymentForm').addEventListener('submit', getCardToken);
 function getCardToken(event){
     event.preventDefault();
@@ -139,7 +136,7 @@ function setCardTokenAndPay(status, response) {
 };
 
 /***
- * UX functions
+ * UX functions 
  */
 
 function cleanCardInfo() {
@@ -149,32 +146,30 @@ function cleanCardInfo() {
     document.getElementById('installments').options.length = 0;
 }
 
-//Handle transition
-//oculta la vista de los productos y muestra la vista con el formulario para pagar
-// document.getElementById('checkout-btn').addEventListener('click', function(){
-    // $('.shopping-cart').fadeOut(500);
-    // setTimeout(() => { $('.container_payment').show(500).fadeIn(); }, 500);
-// });
-//operación contraria a la anterior
-// document.getElementById('go-back').addEventListener('click', function(){
-    // $('.container_payment').fadeOut(500);
-    // setTimeout(() => { $('.shopping-cart').show(500).fadeIn(); }, 500);
-// });
+//Handle transitions
+document.getElementById('checkout-btn').addEventListener('click', function(){ 
+    $('.shopping-cart').fadeOut(500);
+    setTimeout(() => { $('.container_payment').show(500).fadeIn(); }, 500);
+});
+document.getElementById('go-back').addEventListener('click', function(){ 
+    $('.container_payment').fadeOut(500);
+    setTimeout(() => { $('.shopping-cart').show(500).fadeIn(); }, 500);
+});
 
-// Handle price update
-// function updatePrice(){
-//     let quantity = document.getElementById('quantity').value;
-//     let unitPrice = document.getElementById('unit-price').innerHTML;
-//     let amount = parseInt(unitPrice) * parseInt(quantity);
+//Handle price update
+function updatePrice(){
+    let quantity = document.getElementById('quantity').value;
+    let unitPrice = document.getElementById('unit-price').innerHTML;
+    let amount = parseInt(unitPrice) * parseInt(quantity);
 
-//     document.getElementById('cart-total').innerHTML = '$ ' + amount;
-//     document.getElementById('summary-price').innerHTML = '$ ' + unitPrice;
-//     document.getElementById('summary-quantity').innerHTML = quantity;
-//     document.getElementById('summary-total').innerHTML = '$ ' + amount;
-//     document.getElementById('amount').value = amount;
-// };
-// document.getElementById('quantity').addEventListener('change', updatePrice);
-// updatePrice();
+    document.getElementById('cart-total').innerHTML = '$ ' + amount;
+    document.getElementById('summary-price').innerHTML = '$ ' + unitPrice;
+    document.getElementById('summary-quantity').innerHTML = quantity;
+    document.getElementById('summary-total').innerHTML = '$ ' + amount;
+    document.getElementById('amount').value = amount;
+};
+document.getElementById('quantity').addEventListener('change', updatePrice);
+updatePrice();
 
-// //Retrieve product description
-// document.getElementById('description').value = document.getElementById('product-description').innerHTML;
+//Retrieve product description
+document.getElementById('description').value = document.getElementById('product-description').innerHTML;

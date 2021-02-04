@@ -1,10 +1,13 @@
 @php
-use App\Comentarios;
+    use App\Comentarios;
+    // dd(session('key'));
 @endphp
 @extends('files.template')
 
 @section('popup')
-    @include('files.modal_news')
+    @if(session('key') == null)
+        @include('files.modal_news')
+    @endif
 @endsection
 <style>
 body {
@@ -44,6 +47,7 @@ body {
 </style>
 @section('content')
     <!-- START SECTION SHOP -->
+ 
     <div class="section">
         <div class="container">
             @foreach ($autores as $autor)
@@ -127,41 +131,33 @@ body {
                     </div>
                 </div>
             @endforeach
-        </div>
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Título</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                    {{-- <iframe width="560" height="315" src="https://www.youtube.com/embed/OTdPL8Gvtp4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> --}}
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/U-Ooxpz0Eqk"></iframe>
+            <div  class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="iframe" class="modal-body" style="position: relative;
+                        overflow: hidden;
+                        padding-top: 56.25%;">
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                  {{-- <button type="button" class="btn btn-primary">S</button> --}}
-                </div>
-              </div>
             </div>
-          </div>
+        </div>
     </div>
     <!-- END SECTION SHOP -->
 @endsection
 
 @section('scripts')
-    
     <script>
-     
-        // $('.fader').hover(function() {
-        //     $(this).find("img").fadeToggle();
-        // });
-        // $('.alert').alert()
         function agregar(id){
             $.ajax({
                 async:true,
@@ -170,7 +166,7 @@ body {
                 data: {
                     cantidad: 1,
                     id: id,
-                   
+
                 }
             }).done(function(result){
                 // alert(result)
@@ -190,7 +186,32 @@ body {
                     })
                 }
             });
-        }
+        };
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('verga') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            // var modal = $(this)
+            // $('#exampleModalLabel').text(recipient)
+            // modal.find('.modal-title').text(recipient)
+            // modal.find('.modal-body input').val(recipient)
+
+            $.get('{{ url("iframe")}}/'+recipient, function(data){
+                
+                document.getElementById('iframe').innerHTML = data;
+                // document.getElementById('iframe').style.position =  'absolute';
+                // document.getElementById('iframe').style.top = 0;
+                // document.getElementById('iframe').style.left = 0;
+                // document.getElementById('iframe').style.bottom = 0;
+                // document.getElementById('iframe').style.right = 0;
+                // document.getElementById('iframe').style.width = '100%';
+                // document.getElementById('iframe').style.height = '100%';
+                // document.getElementById('iframe').style.border = 'none';
+
+            })
+        })
+
     </script>
 
     <script>

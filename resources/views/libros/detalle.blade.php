@@ -22,7 +22,7 @@
                         <div class="product_price" style="float: left">
                             <span class="price">$ {{number_format($libro->Precio,2)}}</span>
                         </div>
-                        <div class="rating_wrap" style="float: inline-end">
+                        <div class="rating_wrap" style="float: right">
                             <div class="rating">
                                 <div class="product_rate" style="width:{{ (100/5)*round($promedio) }}%">
                                 </div>
@@ -89,7 +89,7 @@
                                     @foreach ($comentarios as $comments)
                                     <li>
                                         <div class="comment_img">
-                                            <img src="{{ asset('assets/images/user1.jpg') }}" />
+                                            <img src="{{ asset('images/profile.png') }}" />
                                         </div>
                                         <div class="comment_block">
                                             <div class="rating_wrap">
@@ -109,12 +109,21 @@
                                     @endforeach
                                 </ul>
                             </div>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                             @endif
                             {{-- Form para agregar comentarios --}}
                             <div class="review_form field_form">
                                 <h5>Agregar Comentario</h5>
                                 {!! Form::open(['url'=>'agregarComentario','class'=>'row mt-3']) !!}
                                     <div class="form-group col-12">
-                                        <input type="hidden" id="Star_rating" name="Star_rating"value="">
+                                        <input type="hidden" id="Star_rating" name="Star_rating">
                                         <div class="star_rating">
                                             <span data-value="1" ><i class="far fa-star"></i></span>
                                             <span data-value="2" ><i class="far fa-star"></i></span>
@@ -169,18 +178,20 @@
                     id: id,
                 }
             }).done(function(result){
-                alert(result)
+                // alert(result)
                 if(result == 'Hecho'){
-                //    $('#headerNew').html(result);
-                //    window.location.reload(true);
-                //    window.location.href = window.location.href;
                     $("#headerNew").load(" #headerNew");
+                    swal("Libro agregado", {
+                        buttons: false,
+                        timer: 3000,
+                    });
                 }
             });
         }
 
-        $(document).on("ready", function(){
+       
             $('.star_rating span').on('click', function(){
+              
                     var onStar = parseFloat($(this).data('value'), 10);
                     $('#Star_rating').val(onStar);
                     var stars = $(this).parent().children('.star_rating span');
@@ -193,7 +204,7 @@
                     var si = $('#Star_rating').val();
                     // alert(si)
             });
-        });
+        // });
 
         // <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v8.0&appId=1635210993323859&autoLogAppEvents=1" nonce="sjuzPH7k"></
     </script>

@@ -22,6 +22,8 @@ Auth::routes();
 Route::get('/','CatalogoController@index');
 Route::get('catalogo','CatalogoController@index');
 Route::get('eventos','EventosController@index');
+Route::get('talleres','TallerController@index');
+Route::get('retos','RetoController@index');
 Route::get('detalle/{id}','CatalogoController@detalle');
 Route::get('escritor/{nombre}','CatalogoController@escritor');
 Route::get('getImage/{id}','CatalogoController@getImage');
@@ -43,9 +45,20 @@ Route::post('depositoBancario','PayPalController@deposito');
 Route::get('subirFicha','PedidosController@subirFicha');
 Route::post('subirFichaPago','PedidosController@subirFichaPago');
 Route::get('buscarEvento','EventosController@buscar');
+Route::get('buscarFecha','EventosController@buscarFecha');
 Route::get('aplicarCupon','PedidosController@cupon');
+Route::get('confirmacionPagoMP','MercadoPagoController@confirmacionPagoMP');
+Route::any('mercadoPagoPay','MercadoPagoController@mercadoPagoPay');
+Route::get('desactivarModal','IndexController@desactivarModal');
+Route::get('getDataLibro/{id}','CatalogoController@getDataLibro');
+Route::get('getDataContra/{id}','CatalogoController@getDataContra');
+Route::get('iframe/{id}','CatalogoController@getIframe');
+Route::get('boleto',function(){
+    $pdf = PDF::loadView('emails.boleto_virutal');
+    $pdf->download();
+});
 // Route::group(['middleware' => 'auth'], function () {
-  
+
 // });
 
 

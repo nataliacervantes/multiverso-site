@@ -6,6 +6,7 @@ use App\Promociones;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NotificacionDePago;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 
 class PedidosController extends Controller
@@ -17,26 +18,38 @@ class PedidosController extends Controller
     public function subirFichaPago(Request $request){
         $pedido = Pedidos::where('Folio',$request->folio)->first();
 
-        if($request->hasFile('FichaPago')){
-            $var = $request->file('FichaPago');
-            $ext = $request->file('FichaPago')->getClientOriginalExtension();
-            $name = 'FichaPago_'.$request->folio.'.'.$ext;
-            $var->move('Clientes/',$name);
-            $pedido->FichaPago = $name;
+        if($pedido != null){
+            if($request->hasFile('FichaPago')){
+                $var = $request->file('FichaPago');
+                $ext = $request->file('FichaPago')->getClientOriginalExtension();
+                $name = 'FichaPago_'.$request->folio.'.'.$ext;
+                $var->move('Clientes/',$name);
+                $pedido->FichaPago = $name;
+            }
+            $pedido->save();
+
+            Mail::to('delaserna@multiversolibreria.com')->send(new NotificacionDePago($pedido));
+
+            if($pedido){
+                return Redirect::back()->with('status', 'La ficha de pago se subió con éxito!');
+            }else{
+                return Redirect::back()->with('status', 'Hubo un problema, inténtalo más tarde!');
+            }   
+        }else{
+            return Redirect::back()->with('status', 'El Folio que ingresaste es incorrecto!');
         }
-        $pedido->save();
-
-        Mail::to('nataliaglezcervantes@gmail.com')->send(new NotificacionDePago($pedido));
-
-        return back();
+            
     }
     
-    public function cupon(){
+    public function cupon(Request $request){
         $cupon = $_GET['cupon'];
+        // $cupon = $request->cupon;
+        // dd($cupon);
         // var_dump($_GET['cupon']);
         // return $cupon;
         // $cupon = 'Welcome2020';
         $cupones = Promociones::where('Cupon',$cupon)->first();
+        // dd($cupones);
         $fecha = Carbon::now();
         $actual =$fecha->format('Y-m-d'); 
         $fechaInicio = strtotime($cupones->FechaI);
@@ -51,6 +64,8 @@ class PedidosController extends Controller
         if($cupones->Tipo == '3'){
             // dd($actual);
              if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
+                $cupones->Limite = $cupones->Limite-1;
+                $cupones->save();
                 return '3';
              }else{
                  return 'nel';
@@ -58,6 +73,8 @@ class PedidosController extends Controller
             
         }elseif ($cupones->Tipo == '2') {
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
+                $cupones->Limite = $cupones->Limite-1;
+                $cupones->save();
                 return $cupones->Dinero.'/2';
              }else{
                  return 'nel';
@@ -65,6 +82,8 @@ class PedidosController extends Controller
            
         }elseif ($cupones->Tipo == '1') {
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
+                $cupones->Limite = $cupones->Limite-1;
+                $cupones->save();
                 return $cupones->Porcentaje.'/1';
              }else{
                  return 'nel';
