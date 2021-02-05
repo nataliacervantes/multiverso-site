@@ -661,7 +661,8 @@
                         if ( count > 50 ) {
                             // After 5 seconds of waiting something must be wrong, abort
                             clearInterval(waiting4);
-                            alert('Problemas al conectarse con MercadoPago') // Change crappy alert for something nice
+                            alert('Problemas al conectarse con MercadoPago, en breve se recargará la página.') // Change crappy alert for something nice, a span for example
+                            setTimeout(function(){ location.reload() }, 5000);
                         }
                     }
                 }
