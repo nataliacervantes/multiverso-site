@@ -638,6 +638,8 @@
                 checkout.removeEventListener('click', setUpPayment);
                 // Check if the 'mercadopago' modal is ready every 0.1 seconds
                 let waiting4 = setInterval(getMP, 100);
+                // Limit the iterations, just in case 'mercadopago' library could't load or something
+                let count = 0;
                 function getMP() {
                     // The query selector points to the class of the modal parent
                     mp = document.querySelector('.mp-mercadopago-checkout-wrapper');
@@ -655,6 +657,12 @@
                     else {
                         // Modal aint ready yet
                         console.log('waiting')
+                        count = count + 1;
+                        if ( count > 50 ) {
+                            // After 5 seconds of waiting something must be wrong, abort
+                            clearInterval(waiting4);
+                            alert('Problemas al conectarse con MercadoPago') // Change crappy alert for something nice
+                        }
                     }
                 }
             }
