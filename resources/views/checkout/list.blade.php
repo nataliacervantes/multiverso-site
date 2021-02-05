@@ -175,7 +175,7 @@
             	<div class="heading_s1">
             		<h4>Datos de Envío</h4>
                 </div>
-                {!! Form::open(['url'=>'payWithPaypal']) !!}
+                {!! Form::open(['url'=>'payWithPaypal','id' => 'form-multipayment']) !!}
                     @if(isset($direccionCompleta))
                         <input type="hidden" name="addressM" value="{{$direccionCompleta}}">
                     @endif
@@ -252,7 +252,7 @@
                         <button class="btn btn-fill-out flex-item" type="submit">PayPal</button>
                 {!! Form::close() !!}
                         <button  class="btn btn-fill-out flex-item" type="button" id="modal" data-target="#modal-deposito" data-toggle="modal">Depósito</button>
-                        <button class="btn btn-fill-out flex-item" src="" id="button-checkout" onclick="pagarMP()">MercadoPago</button>
+                        <button class="btn btn-fill-out flex-item" src="" id="button-checkout" {{--onclick="pagarMP()" --}}>MercadoPago</button>
                     </div>
                 </div>
                 <div class="toggle_info">
@@ -594,6 +594,7 @@
                             script.src = "https://www.mercadopago.com.mx/integrations/v1/web-payment-checkout.js";
                             script.type = "text/javascript";
                             script.dataset.preferenceId = preference;
+                            script.setAttribute('defer','');
                             document.querySelector("#button-checkout").appendChild(script);
                         }
                     },
@@ -606,8 +607,6 @@
                         }
 
                     }
-
-
             })
             // .done(function(preference) {
             //     var script = document.createElement("script");
@@ -620,12 +619,64 @@
             // })
 
         }
-
-        // # Checkout Mercado Pago por xhr
-        const checkout = document.getElementById('button-checkout');
-        function processPayment() {
-
+    </script>
+    <script defer>
+        // ## Checkout Mercado Pago por xhr ##
+        // Defining consts
+        let checkout = document.getElementById('button-checkout');
+        const multi_form = document.getElementById('form-multipayment');
+        // Add the listener to our button
+        checkout.addEventListener('click', setUpPayment);
+        // Aux Variable, represents the 'mercadopago-modal'
+        let mp = null;
+        function setUpPayment() {
+            // Check target form validation
+            if (multi_form.reportValidity()) {
+                // Form input is OK, use the already declared function to insert the 'mercadopago' script
+                pagarMP();
+                // Remove the listener so further clicks wont insert more scripts
+                checkout.removeEventListener('click', setUpPayment);
+                // Check if the 'mercadopago' modal is ready every 0.1 seconds
+                let waiting4 = setInterval(getMP, 100);
+                function getMP() {
+                    // The query selector points to the class of the modal parent
+                    mp = document.querySelector('.mp-mercadopago-checkout-wrapper');
+                    if (mp != null) {
+                        // Modal is ready, clear the interval and proceed
+                        clearInterval(waiting4);
+                        console.log('ready');
+                        // Hide the 'pago' button and click it
+                        const mp_button = document.querySelector('.mercadopago-button');
+                        mp_button.style.display = "none";
+                        mp_button.click();
+                        // Prepare reset in case of 'cancelar pago'
+                        checkout.addEventListener('click', resetPayment);
+                    }
+                    else {
+                        // Modal aint ready yet
+                        console.log('waiting')
+                    }
+                }
+            }
+            // Else => form input is NOT ok, html will let the user know
         }
-
+        // If the 'pago' is we gotta call the 'mercadopago' script again
+        // in case the user changed any inputs on the form
+        function resetPayment() {
+            // Clone the our button without its children, droping all the
+            // 'mercadopago' stuff inside and any events.
+            let clone = checkout.cloneNode(false);
+            // Fill the clone like its parent and add the listener
+            clone.innerHTML = "Mercado Pago";
+            // Replace the button with the clean clone
+            checkout.replaceWith(clone);
+            // Destroy the existing 'mercadopago' wrapper
+            mp.remove();
+            // Redifine 'mp' and 'checkout', possibly redundant
+            mp = null;
+            checkout = document.getElementById('button-checkout');
+            // setUpPayment again
+            setUpPayment();
+        }
     </script>
 @endsection

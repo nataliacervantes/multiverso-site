@@ -47,7 +47,7 @@ body {
 </style>
 @section('content')
     <!-- START SECTION SHOP -->
- 
+
     <div class="section">
         <div class="container">
             @foreach ($autores as $autor)
@@ -73,16 +73,15 @@ body {
                                               <div class="flip-card">
                                                 <div class="flip-card-inner">
                                                     <div class="flip-card-front">
-                                                        <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px"
-                                                        onmouseover="src='https://www.youtube.com/embed/U-Ooxpz0Eqk';" onmouseout="src='https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada;">
+                                                        <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Portada) !!}" width="100px">
                                                         <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Contraportada) !!}" width="100px">
                                                     </div>
                                                     <div class="flip-card-back" style="display: flex; align-items: center;">
-                                                        <iframe style="width: 100%; height: auto" src="https://www.youtube.com/embed/tgbNymZ7vqY">
+                                                        <iframe style="width: 100%; height: auto;" src="https://www.youtube.com/embed/tgbNymZ7vqY">
                                                         </iframe>
                                                     </div>
                                                 </div>
-                                              </div>         
+                                              </div>
 
                                                 <!-- <img src="images/{{$libro->Titulo}}" width="100px"> -->
                                             </a>
@@ -143,7 +142,7 @@ body {
                         <div id="iframe" class="modal-body" style="position: relative;
                         overflow: hidden;
                         padding-top: 56.25%;">
-                            
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -198,7 +197,7 @@ body {
             // modal.find('.modal-body input').val(recipient)
 
             $.get('{{ url("iframe")}}/'+recipient, function(data){
-                
+
                 document.getElementById('iframe').innerHTML = data;
                 // document.getElementById('iframe').style.position =  'absolute';
                 // document.getElementById('iframe').style.top = 0;
@@ -217,13 +216,20 @@ body {
     <script>
     const flippers = document.querySelectorAll('.product_action_box .icon-magnifier-add.flipper');
     flippers.forEach( (flipper) => {
-      const ancestor = flipper.closest('.product'); 
+      const ancestor = flipper.closest('.product');
       const target = ancestor.querySelector('.flip-card-inner');
       flipper.addEventListener('click', () => {
+         const actionBox = flipper.closest('.product_action_box');
          if (target.style.transform ==  "rotateY(180deg)") {
-            target.style.transform = null;  
+            actionBox.style.top = "50%";
+            actionBox.style.zIndex = 10;
+            target.style.transform = null;
          } else {
+            actionBox.style.top = "20%";
+            actionBox.style.zIndex = 100;
             target.style.transform = "rotateY(180deg)";
+            target.style.position = "relative";
+            target.style.zIndex = 10;
          }
       });
     });
