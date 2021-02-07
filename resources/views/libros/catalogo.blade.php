@@ -77,8 +77,7 @@ body {
                                                         <img src="{!! url('https://admin.multiversolibreria.com/img/Portadas/'.$libro->Contraportada) !!}" width="100px">
                                                     </div>
                                                     <div class="flip-card-back" style="display: flex; align-items: center;">
-                                                        <iframe style="width: 100%; height: auto;" src="https://www.youtube.com/embed/tgbNymZ7vqY">
-                                                        </iframe>
+                                                        <iframe style="width: 100%; height: auto;" src="{{$libro->Video}}"></iframe>
                                                     </div>
                                                 </div>
                                               </div>

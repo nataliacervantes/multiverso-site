@@ -21,6 +21,8 @@ use App\Promociones;
 use App\EventPedido;
 use App\Mail\ConfirmacionDePago;
 use App\Mail\ConfirmacionDePedido;
+use App\Mail\EnviarBoleto;
+use Illuminate\Support\Facades\Mail;
 use Response;
 use Illuminate\Http\Request;
 
@@ -29,43 +31,23 @@ class MercadoPagoController extends Controller
 
     public function mercadoPagoPay(Request $request){
 
-        // $validator = Validator::make($request->all(),[
-        //     'nombre' => 'required',
-        //     'apellido' => 'required',
-        //     'domicilio' => 'required',
-        //     'colonia' => 'required',
-        //     'ciudad' => 'required',
-        //     'estado' => 'required',
-        //     'pais' => 'required',
-        //     'cp' => 'required',
-        //     'telefono' => 'required',
-        //     'total' => 'required',
-        //     'envio' => 'required',
-        //     'email' =>'required|email',
-        //     'address' => 'required',
-        // ]);
-       
-        // if($validator->fails()){
-        //     $preference = array('errors'=> $validator->getMessageBag()->toarray(),'id'=>1);
-        //     return $preference;
-        // }
-        // else{
-
             SDK::setAccessToken("TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496");
 
-            $preference = new Preference();
-            session_start();
-            $carrito = Carrito::where('session_estatus',session_id())->get();
+            //se crea un pedido nuevo y se obtiene el último folio dado de alta en la db
             $pedido = new Pedidos();
             $pedidos = Pedidos::latest('Folio')->first();
             
+            //si el folio no existe es porque no se ha dado de alta ningún pedido anteriormente  de lo contrario
+            //se incrementa el folio y se guarda en el registro nuevo
             if($pedidos != null){
                 $pedido->Folio = $pedidos->Folio + 1;
             }else{
                 $pedido->Folio = 000000;
             }
 
+            //address es para saber qué campos deben ser obligatorios si es 1 el domicilio debe estar completo
             if($request->address ==1){
+                //se validan los campos obligatorios
                 $validator = Validator::make($request->all(),[
                     'nombre' => 'required',
                     'apellido' => 'required',
@@ -81,11 +63,12 @@ class MercadoPagoController extends Controller
                     'email' =>'required|email',
                     'address' => 'required',
                 ]);
-               
+                    //si la validación detecta errores retorna a la vista y envía el arreglo con la información
                 if($validator->fails()){
                     $preference = array('errors'=> $validator->getMessageBag()->toarray(),'id'=>1);
                     return $preference;
                 }else{
+                    //si la validación pasa se completa el pedido con la información del request
                     $pedido->session = session_id();
                     $pedido->EstatusPago = 'Pendiente';
                     $pedido->EstatusEnvio = 'Pendiente';
@@ -104,7 +87,7 @@ class MercadoPagoController extends Controller
                     $pedido->Envio = $request->envio;
                     $pedido->Metodo ='MercadoPago';
                 }
-
+            //si el request no necesita el domicilio  entra a la siguiente validación
             }else{
 
                 $validator = Validator::make($request->all(),[
@@ -114,7 +97,7 @@ class MercadoPagoController extends Controller
                     'total' => 'required',
                     'email' =>'required|email',
                 ]);
-               
+                
                 if($validator->fails()){
                     $preference = array('errors'=> $validator->getMessageBag()->toarray(),'id'=>1);
                     return $preference;
@@ -138,12 +121,31 @@ class MercadoPagoController extends Controller
                     $pedido->Metodo ='MercadoPago';
                 }
             }
-
+            //se guarda el pedido
             $pedido->save();
            
+            session_start();
+            //se inicia el proceso para crear la preferencia en mercado pago
+            $preference = new Preference();
+            //Se buscan los productos en  el carrito
+            $carrito = Carrito::where('session_estatus',session_id())->get();
+
+            //si el carrito no está vacío crea una preferencia
             if($carrito->count() > 0){
                 $datos = array();
+                if($request->envio != null){
+                    $item = new Item();
+                    $item->title = 'Envio';
+                    $item->id = 1;
+                        // $item->category_id = "Evento";
+                    $item->description = 'Costo de envío';
+                        // $item->currency_id = "MXN";
+                    $item->quantity = 1;
+                    $item->unit_price = $request->envio;  
+                    $datos[] = $item;
+                }
                 foreach ($carrito as $car) {
+                    //se crea un nuevo item por cada producto en el carrito 
                     $item = new Item();
                     $book = Libros::find($car->books_id);
                     $event = Eventos::find($car->eventos_id);
@@ -196,18 +198,6 @@ class MercadoPagoController extends Controller
                     "failure" => "https:/multiversolibreria/fail",
                     "pending" => "https://multiversolibreria/fail"
                 );
-                if($request->envio != null){
-                    $envio = new Shipments();
-                    $envio->cost = $request->envio;
-                    $envio->mode =  "not_specified";
-                    
-
-                    // $preference->shipments=  (object) array(
-                    //     "cost" => $request->envio,
-                    //     "mode" => "not_specified"
-                    //     // "pending" => "https://multiversolibreria/fail"
-                    // );
-                }
                
                 $preference->auto_return = "approved";
                 $preference->external_reference = $pedido->id;
@@ -232,18 +222,18 @@ class MercadoPagoController extends Controller
     }
 
     public function confirmacionPagoMP(){
+
         if($_GET['status']== 'approved'){
             $id = $_GET['external_reference'];
 
             $pedido = Pedidos::find($id);
             $pedido->EstatusPago = 'Pagado';
-            // $pedido->Metodo ='PayPal';
             $pedido->save();
-         
+
+            session_start();
             $carritos = Carrito::where('session_estatus',session_id())->get();
-            
+            // dd($carritos);
             foreach($carritos as $carrito){
-                
                 if($carrito->books_id != null){
                     
                     $pivot = new BookPedido();
@@ -251,7 +241,7 @@ class MercadoPagoController extends Controller
                     $pivot->pedidos_id = $pedido->id;
                     $pivot->Cantidad =$carrito->Cantidad;
                     $pivot->save();
-                    // Mail::to($pedido->Email)->send(new ConfirmacionDePago($pedido));
+                    Mail::to($pedido->Email)->send(new ConfirmacionDePago($pedido));
                     $carrito->delete();
                 }elseif($carrito->eventos_id != null){
                     $pivot = new EventPedido();
@@ -259,11 +249,16 @@ class MercadoPagoController extends Controller
                     $pivot->pedidos_id = $pedido->id;
                     $pivot->Cantidad =$carrito->Cantidad;
                     $pivot->save();
-                    // Mail::to($pedido->Email)->send(new EnviarBoleto($pedido));
+                    Mail::to($pedido->Email)->send(new EnviarBoleto($pedido));
                     $carrito->delete();
                 }
             }
-
+            session_destroy();
+            return view('checkout.confirmacioPago');
+        }else{
+            return $result->state;
+            $status = 'Hubo un problema con la transacción, inténtalo más tarde por favor ';
+            return redirect('error_page')->with(['status'=>$status]);
         }
     }
 }

@@ -29,6 +29,6 @@ class EnviarBoleto extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.boleto_virtual', compact('msg'));
+        return $this->view('emails.boleto_virutal', compact('msg'));
     }
 }

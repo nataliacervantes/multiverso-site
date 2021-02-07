@@ -181,9 +181,6 @@ class PayPalController extends Controller
                     $carrito->delete();
                 }
             }
-
-            
-          
             session_destroy();
             return view('checkout.confirmacioPago');
         }else{

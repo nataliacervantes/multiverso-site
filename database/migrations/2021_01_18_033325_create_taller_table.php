@@ -21,6 +21,7 @@ class CreateTallerTable extends Migration
             $table->date('Inicio');
             $table->date('Fin');
             $table->time('Hora');
+            $table->longText('Imagen');
             $table->timestamps();
         });
     }

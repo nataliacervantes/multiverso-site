@@ -18,7 +18,7 @@ use Carbon\Carbon;
                             <li><a href="#"><i class="ti-money"></i>{{$taller->Precio}}</a></li>
                         </ul>
                         <div class="blog_img">
-                            <img src="assets/images/blog_img1.jpg" alt="blog_img1">
+                            <img src="{!! url('https://admin.multiversolibreria.com/img/Taller/'.$taller->Imagen) !!}" alt="blog_img1">
                         </div>
                         <div class="blog_content">
                             <div class="blog_text">
@@ -61,9 +61,9 @@ use Carbon\Carbon;
                             <ul class="widget_recent_post">
                                 <li>
                                     <div class="post_footer">
-                                        {!! Form::open(['url'=>'comprarTaller']) !!}
+                                        {{-- {!! Form::open(['url'=>'comprarTaller']) !!}
                                             <button class="btn btn-warning">Comprar</button>
-                                        {!! Form::close() !!}
+                                        {!! Form::close() !!} --}}
                                     </div>
                                 </li>
                             </ul>

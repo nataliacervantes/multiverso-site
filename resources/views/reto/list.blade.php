@@ -9,21 +9,21 @@ use Carbon\Carbon;
         <div class="container">
             <div class="row">
                 <div class="col-lg-9">
-                    @foreach ($talleres as $taller)
+                    @foreach ($retos as $reto)
                     <div class="single_post">
-                        <h2 class="blog_title">{{$taller->NombreTaller}}</h2>
+                        <h2 class="blog_title">{{$reto->NombreReto}}</h2>
                         <ul class="list_none blog_meta">
-                            <li><a href="#"><i class="ti-calendar"></i>{{$taller->Inicio}}</a></li>
-                            <li><a href="#"><i class="ti-time"></i>{{$taller->Hora}}</a></li>
-                            <li><a href="#"><i class="ti-money"></i>{{$taller->Precio}}</a></li>
+                            <li><a href="#"><i class="ti-calendar"></i>{{$reto->Inicio}}</a></li>
+                            <li><a href="#"><i class="ti-time"></i>{{$reto->Hora}}</a></li>
+                            <li><a href="#"><i class="ti-money"></i>{{$reto->Precio}}</a></li>
                         </ul>
                         <div class="blog_img">
-                            <img src="assets/images/blog_img1.jpg" alt="blog_img1">
+                            <img src="{!! url('https://admin.multiversolibreria.com/img/Reto/'.$reto->Imagen) !!}" alt="blog_img1">
                         </div>
                         <div class="blog_content">
                             <div class="blog_text">
                                 {{-- <blockquote class="blockquote_style3"> --}}
-                                    {{-- <p>{{$taller->Descripción}}</p> --}}
+                                    {{-- <p>{{$reto->Descripción}}</p> --}}
                                 {{-- </blockquote> --}}
                                 {{-- <div class="row">
                                     <div class="col-sm-6">
@@ -37,7 +37,7 @@ use Carbon\Carbon;
                                         </div>
                                     </div>
                                 </div> --}}
-                                <p>{{$taller->Descripción}}</p>
+                                <p>{{$reto->Descripción}}</p>
                                 
                                 <div class="blog_post_footer">
                                     <div class="row justify-content-between align-items-center">
@@ -47,6 +47,7 @@ use Carbon\Carbon;
                             </div>
                         </div>
                     </div>
+                   
                     @endforeach
                 </div>
                 <div class="col-xl-3 mt-4 pt-2 mt-xl-0 pt-xl-0">
@@ -57,16 +58,19 @@ use Carbon\Carbon;
                             </div>
                         </div>
                         <div class="widget">
-                            <h5 class="widget_title">Registrarme</h5>
-                            <ul class="widget_recent_post">
-                                <li>
-                                    <div class="post_footer">
-                                        {!! Form::open(['url'=>'comprarTaller']) !!}
-                                            <button class="btn btn-warning">Comprar</button>
+                            <h5 class="widget_title">Suscribirme por ${{$reto->Precio}} mensuales</h5>
+                            {{-- <ul class="widget_recent_post"> --}}
+                                {{-- <li> --}}
+                                    {{-- <div class="post_footer">
+                                        {!! Form::open(['url'=>'comprarReto']) !!}
+                                            <button class="btn btn-warning">Paypal</button>
                                         {!! Form::close() !!}
-                                    </div>
-                                </li>
-                            </ul>
+                                        {!! Form::open(['url'=>'comprarReto']) !!}
+                                            <button class="btn btn-warning">Mercado</button>
+                                    {!! Form::close() !!}
+                                    </div> --}}
+                                {{-- </li> --}}
+                            {{-- </ul> --}}
                         </div>
                     </div>
                 </div>
@@ -82,7 +86,7 @@ use Carbon\Carbon;
             var cantidad = $('#cantidad-'+id).val();
             
             $.ajax({
-                url: "{{url('agregartaller') }}",
+                url: "{{url('agregarReto') }}",
                 method: 'GET',
                 data: {
                     cantidad: cantidad,
@@ -91,7 +95,7 @@ use Carbon\Carbon;
             }).done(function(result){
                 // alert(result)
                 $("#headerNew").load(" #headerNew");
-                swal("taller agregado", {
+                swal("reto agregado", {
                     buttons: false,
                     timer: 3000,
                 });
