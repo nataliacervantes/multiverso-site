@@ -31,7 +31,7 @@ class MercadoPagoController extends Controller
 
     public function mercadoPagoPay(Request $request){
 
-            SDK::setAccessToken("TEST-991604415903884-103004-9d5d54072d80dfba880a0b906e9fe537-62670496");
+            SDK::setAccessToken("APP_USR-991604415903884-103004-415ee28ce26d977237de7495940c923e-62670496");
 
             //se crea un pedido nuevo y se obtiene el último folio dado de alta en la db
             $pedido = new Pedidos();
@@ -119,6 +119,9 @@ class MercadoPagoController extends Controller
                     $pedido->Total = $request->total;
                     $pedido->Envio = 0;
                     $pedido->Metodo ='MercadoPago';
+
+                     //se guarda el pedido
+                    $pedido->save();
                 }
             }
             //se guarda el pedido
