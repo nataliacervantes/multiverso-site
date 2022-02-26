@@ -20,4 +20,12 @@ class IndexController extends Controller
     public function desactivarModal(Request $request){
         $value = session(['key' => 'la madre']);
     }
+
+    public function politicas(){
+        return view('files.politica');
+    }
+
+    public function terminos(){
+        return view('files.terminos');
+    }
 }

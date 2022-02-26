@@ -34,13 +34,13 @@ class PedidosController extends Controller
                 return Redirect::back()->with('status', 'La ficha de pago se subió con éxito!');
             }else{
                 return Redirect::back()->with('status', 'Hubo un problema, inténtalo más tarde!');
-            }   
+            }
         }else{
             return Redirect::back()->with('status', 'El Folio que ingresaste es incorrecto!');
         }
-            
+
     }
-    
+
     public function cupon(Request $request){
         $cupon = $_GET['cupon'];
         // $cupon = $request->cupon;
@@ -51,7 +51,7 @@ class PedidosController extends Controller
         $cupones = Promociones::where('Cupon',$cupon)->first();
         // dd($cupones);
         $fecha = Carbon::now();
-        $actual =$fecha->format('Y-m-d'); 
+        $actual =$fecha->format('Y-m-d');
         $fechaInicio = strtotime($cupones->FechaI);
         $fechaFin = strtotime($cupones->FechaF);
         $fechaActual = strtotime($actual);
@@ -70,7 +70,7 @@ class PedidosController extends Controller
              }else{
                  return 'nel';
              }
-            
+
         }elseif ($cupones->Tipo == '2') {
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
                 $cupones->Limite = $cupones->Limite-1;
@@ -79,7 +79,7 @@ class PedidosController extends Controller
              }else{
                  return 'nel';
              }
-           
+
         }elseif ($cupones->Tipo == '1') {
             if(($fechaActual >= $fechaInicio) && ($fechaActual <= $fechaFin)){
                 $cupones->Limite = $cupones->Limite-1;
@@ -91,4 +91,24 @@ class PedidosController extends Controller
         }
         // return $cupon;
     }
+
+
+    // public function duplicado(){
+    //     $array = [1,8,8,4,1,4,8,74];
+    //     $newA=[];
+    //     for($i=0; $i<count($array); $i++){
+    //         $var = $array[$i];
+    //         for($j=0; $j<count($array); $j++){
+    //             if($i != $j){
+    //                 if($var == $array[$j]){
+    //                     $validation = in_array($var,$newA);
+    //                     if(!$validation){
+    //                         $newA[] = $var;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     dd($newA);
+    // }
 }
